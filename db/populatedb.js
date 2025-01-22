@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 // This script only run once
 
-const { Client } = reequire("pg");
+const { Client } = require("pg");
 require("dotenv").config();
 
 const SQL = `
@@ -9,10 +9,10 @@ CREATE TABLE book (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   title VARCHAR(255),
   ISBN VARCHAR(13),
-  pages INT
+  pages INT,
   added DATE,
   reading BOOLEAN DEFAULT FALSE,
-  read BOOLEAN DEFAULT FALSE,
+  read BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE author (
@@ -22,19 +22,19 @@ CREATE TABLE author (
   description TEXT,
   date_of_birth DATE,
   date_of_death DATE,
-  name GENERATED ALWAYS AS CONCAT(first_name, last_name) STORED,
-);
+  name TEXT GENERATED ALWAYS AS (CONCAT(first_name, last_name)) STORED
+);################### error 'always'##########
 
 CREATE TABLE genre (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  name VARCHAR(255), 
-)
+  name VARCHAR(255)
+);
 
 CREATE TABLE book_author (
   book_id INT REFERENCES book(id) ON DELETE RESTRICT,
   author_id INT REFERENCES authors(id) ON DELETE CASCADE,
   PRIMARY KEY(book_id, author_id)
-)
+);
 
 CREART TABLE bood_genre (
   book_id INT REFERENCS book(id) ON DELETE RESTRICT,
@@ -60,7 +60,7 @@ INSERT INTO book_genre (book_id, genre_id) VALUES (1, 2);`;
 async function main() {
   console.log("Seeding...");
   const client = new Client({
-    connectionString: `postgresql://${process.env.USERNAME}:${process.env.PASSWORD}@localhost:5432/books`,
+    connectionString: `postgresql://${process.env.USERNAME}:${process.env.PASSWORD}@localhost:5432/book_inventory`,
   });
   await client.connect();
   await client.query(SQL);
