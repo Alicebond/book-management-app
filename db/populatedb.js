@@ -10,7 +10,7 @@ CREATE TABLE book (
   title VARCHAR(255),
   ISBN VARCHAR(13),
   pages INT,
-  added DATE,
+  added DATE DEFAULT NOW(),
   reading BOOLEAN DEFAULT FALSE,
   read BOOLEAN DEFAULT FALSE
 );
@@ -22,8 +22,8 @@ CREATE TABLE author (
   description TEXT,
   date_of_birth DATE,
   date_of_death DATE,
-  name TEXT GENERATED ALWAYS AS (CONCAT(first_name, last_name)) STORED
-);################### error 'always'##########
+  name TEXT GENERATED ALWAYS AS (first_name || ' ' || last_name) STORED
+);
 
 CREATE TABLE genre (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -32,24 +32,27 @@ CREATE TABLE genre (
 
 CREATE TABLE book_author (
   book_id INT REFERENCES book(id) ON DELETE RESTRICT,
-  author_id INT REFERENCES authors(id) ON DELETE CASCADE,
+  author_id INT REFERENCES author(id) ON DELETE CASCADE,
   PRIMARY KEY(book_id, author_id)
 );
 
-CREART TABLE bood_genre (
-  book_id INT REFERENCS book(id) ON DELETE RESTRICT,
-  genre_id INT REFERENCS genre(id) ON DELETE RESTRICT, 
+CREATE TABLE book_genre (
+  book_id INT REFERENCES book(id) ON DELETE RESTRICT,
+  genre_id INT REFERENCES genre(id) ON DELETE RESTRICT, 
   PRIMARY KEY (book_id, genre_id)
 );
   
-INERT INTO book (title, ISBN, pages, added, read)
+INSERT INTO book (title, ISBN, pages, added, read)
 VALUES ('Wonder', '9780375969027', 320, now(), TRUE);
 
 INSERT INTO author (first_name, last_name, date_of_birth)
 VALUES ('R. J.', 'Palacio', '1963-07-13');
 
 INSERT INTO genre (name)
-VALUES ('Young Adult 青年文学', 'Fiction 虚构作品', 'Russian Literature 俄罗斯文学', 'Fantasy 奇幻文学');
+VALUES ('Young Adult'), 
+      ('Fiction'), 
+      ('Russian Literature'), 
+      ('Fantasy');
 
 INSERT INTO book_author (book_id, author_id) VALUES (1, 1);
 
