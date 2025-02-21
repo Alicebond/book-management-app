@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", indexRouter);
 
-const port = 3154;
+const port = process.env.PORT || 3154;
 app.listen(port, () => {
   console.log(`book management app - listening on port: ${port}`);
 });
