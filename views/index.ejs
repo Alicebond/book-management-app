@@ -4,6 +4,7 @@
   <body>
     <%- include ('header') %>
     <p>All books will be displayed here</p>
-    <%= books[0].title %> <%- include ('footer') %>
+    <a href="<%= books[0].url %>"> <%= books[0].title %> </a>
+    <%- include ('footer') %>
   </body>
 </html>

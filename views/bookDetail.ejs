@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include ('head') %>
+  <body>
+    <%- include ('header') %>
+
+    <h2><%= book.title %></h2>
+    <ul>
+      <li><%= author.name %></li>
+      <li><%= book.isbn %></li>
+      <li><%= book.pages %></li>
+      <li><%= book.language %></li>
+      <% genres.forEach((genre) => { %>
+      <li><%= genre.name %></li>
+      <% }) %>
+    </ul>
+    <%- include ('footer') %>
+  </body>
+</html>

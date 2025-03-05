@@ -1,7 +1,8 @@
 const { Router } = require("express");
 const indexRouter = Router();
-const { getAllBooks } = require("../controllers/bookController");
 
-indexRouter.get("/", getAllBooks);
+const bookController = require("../controllers/bookController");
+
+indexRouter.get("/", bookController.getAllBooks);
 
 module.exports = indexRouter;
