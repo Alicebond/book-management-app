@@ -12,8 +12,8 @@ const assetsPath = path.join(__dirname, "public");
 app.use(express.static(assetsPath));
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/book", bookRouter);
 app.use("/", indexRouter);
+app.use("/book", bookRouter);
 
 const port = process.env.PORT || 3154;
 app.listen(port, () => {

@@ -1,10 +1,20 @@
 body {
   box-sizing: border-box;
+  font-family: "Inter", sans-serif;
 }
 
-span {
-  display: inline-block;
-  margin: 5px;
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-right a {
+  margin-left: 15px;
+}
+
+.book-info p {
+  margin: 10px;
 }
 
 .op {
@@ -15,9 +25,14 @@ span {
   background-color: black;
   color: white;
   padding: 4px;
+  margin-left: 10px;
   border-radius: 5px;
 }
 
 .ds p {
-  margin: 5px;
+  margin-top: 20px;
+}
+
+.check {
+  color: green;
 }

@@ -5,22 +5,44 @@
     <%- include ('header') %>
     <div class="book-info">
       <h2><%= book.title %></h2>
-      <span class="op">Author:</span> <i><%= author.name %></i><br />
-
-      <span class="op">ISBN:</span> <%= book.isbn %><br />
-
-      <span class="op">Pages:</span> <%= book.pages %><br />
-
-      <span class="op">Language:</span> <%= book.language %><br />
-
-      <span class="op"> Genre:</span>
-      <% genres.forEach((genre) => { %>
-      <span class="ge"><%=genre.name %> </span>
+      <p>
+        <span class="op">Author:</span>
+        <i><%= author.name %></i>
+      </p>
+      <p>
+        <span class="op">ISBN:</span>
+        <%= book.isbn %>
+      </p>
+      <p>
+        <span class="op">Pages:</span>
+        <%= book.pages %>
+      </p>
+      <p>
+        <span class="op">Language:</span>
+        <%= book.language %>
+      </p>
+      <p>
+        <span class="op">Status: </span>
+        <% if (book.reading) { %> 
+          Currently reading 
+          <% } else { %>  
+            <span class="check">&#10004</span> Read 
+          <% } %>
+      </p>
+      <p>
+        <span class="op"> Genre:</span>
+        <% genres.forEach((genre) => { %>
+        <span class="ge"><%=genre.name %> </span>
       <% }) %>
+      </p>
+      <p>
       <div class="ds">
-        <span class="op">Description:</span>
-        <p><%=book.description %></p>
+        <p>
+          <span class="op">Description:</span>
+          <%=book.description %>
+        </p>
       </div>
+    </p>
     </div>
     <%- include ('footer') %>
   </body>

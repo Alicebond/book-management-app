@@ -14,7 +14,7 @@ const bookDetail = asyncHandler(async (req, res) => {
 });
 
 const createBookGet = asyncHandler(async (req, res) => {
-  // render the form
+  res.render("bookForm");
 });
 
 const createBookPost = asyncHandler(async (req, res) => {
