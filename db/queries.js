@@ -5,6 +5,16 @@ async function getAllBooks() {
   return rows;
 }
 
+async function getAllGenres() {
+  const { rows } = await pool.query("SELECT * FROM genre");
+  return rows;
+}
+
+async function getAllAuthors() {
+  const { rows } = await pool.query("SELECT * FROM author");
+  return rows;
+}
+
 async function getBookDetail(isbn) {
   const { rows } = await pool.query(`SELECT * FROM book WHERE isbn = ($1)`, [
     isbn,
@@ -45,4 +55,10 @@ async function insertNewbook(bookInfo) {
   await pool.query("");
 }
 
-module.exports = { getAllBooks, insertNewbook, getBookDetail };
+module.exports = {
+  getAllBooks,
+  getAllAuthors,
+  getAllGenres,
+  insertNewbook,
+  getBookDetail,
+};

@@ -3,11 +3,39 @@
   <%- include ('head') %>
   <body>
     <%- include ('header') %>
-    <p>All books will be displayed here</p>
-    <p>
-      <a href="<%= books[0].url %>"> <%= books[0].title %> </a>
-    </p>
-
+    <div class="books">
+      <% if (books) {%>
+      <p>
+        <% books.forEach( (book) => { %>
+        <p><a href="<%= book.url %>"> <%= book.title %> </a></p>
+        <%} ) %>
+      </p>
+      <% } else { %>
+      <p>There are no books, try add one <a href="/book/add">here</a></p>
+      <% } %>
+    </div>
+    <div class="genres">
+      <% if (genres) {%>
+      <p>
+        <% genres.forEach( (genre) => { %>
+        <p><a href=""> <%= genre.name %> </a></p>
+        <%} ) %>
+      </p>
+      <% } else { %>
+      <p>There are no genres</p>
+      <% } %>
+    </div>
+    <div class="authors">
+      <% if (authors) {%>
+      <p>
+        <% authors.forEach( (author) => { %>
+        <p><a href=""> <%= author.name %> </a></p>
+        <%} ) %>
+      </p>
+      <% } else { %>
+      <p>There are no authors</p>
+      <% } %>
+    </div>
     <%- include ('footer') %>
   </body>
 </html>
