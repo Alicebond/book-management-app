@@ -9,7 +9,10 @@ exports.genreList = asyncHandler(async (req, res, next) => {
 
 // Display detail of specific genre
 exports.genreDetail = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: genre detail");
+  const genreid = req.params.id;
+  const { genre, genreBooks } = await db.getGenre(genreid);
+  console.log(genreBooks);
+  res.render("genreDetail", { genre, genreBooks });
 });
 
 // * genre add form is included  in book add form * //

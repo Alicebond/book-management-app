@@ -12,7 +12,6 @@
         <% if (books) {%> <% books.forEach( (book) => { %>
         <p>
           <a href="<%= book.url %>"> <%= book.title %> </a>
-          <span></span>
         </p>
         <%} ) %> <% } else { %>
         <p>There are no books, try add one <a href="/book/add">here</a></p>
@@ -26,7 +25,7 @@
       </p>
       <div class="genres-main">
         <% if (genres) {%> <% genres.forEach( (genre) => { %>
-        <p class="genre"><a href=""> <%= genre.name %> </a></p>
+        <p class="genre"><a href="<%= genre.url %>"> <%= genre.name %> </a></p>
         <%} ) %> <% } else { %>
         <p>There are no genres</p>
         <% } %>
@@ -39,7 +38,7 @@
       </p>
       <div class="authors-main">
         <% if (authors) {%> <% authors.forEach( (author) => { %>
-        <p><a href=""> <%= author.name %> </a></p>
+        <p><a href="<%= author.url %>"> <%= author.name %> </a></p>
         <%} ) %> <% } else { %>
         <p>There are no authors</p>
         <% } %>

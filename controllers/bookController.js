@@ -1,9 +1,10 @@
 const db = require("../db/queries");
+const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 
 //Display list of all books, genres, authors
-exports.bookList = asyncHandler(async (req, res) => {
+exports.lists = asyncHandler(async (req, res) => {
   const books = await db.getAllBooks();
   const genres = await db.getAllGenres();
   const authors = await db.getAllAuthors();
@@ -14,7 +15,11 @@ exports.bookList = asyncHandler(async (req, res) => {
 exports.bookDetail = asyncHandler(async (req, res) => {
   const isbn = req.params.isbn;
   const { book, author, genres } = await db.getBookDetail(isbn);
-  res.render("bookDetail", { book, author, genres });
+  const dateAdded = DateTime.fromJSDate(book.added).toLocaleString(
+    DateTime.DATE_MED
+  );
+
+  res.render("bookDetail", { book, dateAdded, author, genres });
 });
 
 // Display form to add a new book

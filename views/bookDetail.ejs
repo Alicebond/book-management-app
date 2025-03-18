@@ -19,7 +19,11 @@
       </p>
       <p>
         <span class="op">Language:</span>
-        <%= book.language %>
+        <span><%= book.language %></span>
+      </p>
+      <p>
+        <span class="op">Date Added:</span>
+        <%= dateAdded %>
       </p>
       <p>
         <span class="op">Status: </span>
@@ -35,14 +39,14 @@
         <span class="ge"><%=genre.name %> </span>
       <% }) %>
       </p>
-      <p>
+
       <div class="ds">
         <p>
           <span class="op">Description:</span>
-          <%=book.description %>
+          <span style="white-space: pre-line;"><%=book.description %></span>
         </p>
       </div>
-    </p>
+
     </div>
     <%- include ('footer') %>
   </body>

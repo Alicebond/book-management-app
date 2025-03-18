@@ -21,12 +21,13 @@ async function getBookDetail(isbn) {
   ]);
 
   const book = rows[0];
-  const author = await getAuthor(book.id);
-  const genres = await getGenre(book.id);
+  const author = await getBookAuthor(book.id);
+  const genres = await getBookGenre(book.id);
+
   return { book, author, genres };
 }
 
-async function getAuthor(bookid) {
+async function getBookAuthor(bookid) {
   const { rows } = await pool.query(
     `SELECT name 
     FROM author, book_author, book 
@@ -39,7 +40,7 @@ async function getAuthor(bookid) {
   return rows[0];
 }
 
-async function getGenre(bookid) {
+async function getBookGenre(bookid) {
   const { rows } = await pool.query(
     `SELECT name 
     FROM genre, book_genre, book 
@@ -47,6 +48,27 @@ async function getGenre(bookid) {
       AND book_genre.genre_id = genre.id 
       AND book.id = $1;`,
     [bookid]
+  );
+  return rows;
+}
+
+async function getGenre(genreid) {
+  const { rows } = await pool.query("SELECT * FROM genre WHERE id = $1", [
+    genreid,
+  ]);
+  const genre = rows[0];
+  console.log(genre);
+  const genreBooks = await getGenreBook(genreid);
+  return { genre, genreBooks };
+}
+
+async function getGenreBook(genreid) {
+  const { rows } = await pool.query(
+    `SELECT book.title, book.url 
+    FROM book, genre, book_genre
+    WHERE book.id = book_genre.book_id
+    AND book_genre.genre_id = $1`,
+    [genreid]
   );
   return rows;
 }
@@ -59,6 +81,7 @@ module.exports = {
   getAllBooks,
   getAllAuthors,
   getAllGenres,
+  getGenre,
   insertNewbook,
   getBookDetail,
 };
