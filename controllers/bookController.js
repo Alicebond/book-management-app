@@ -5,9 +5,11 @@ const CustomNotFoundError = require("../errors/CustomNotFoundError");
 
 //Display list of all books, genres, authors
 exports.lists = asyncHandler(async (req, res) => {
-  const books = await db.getAllBooks();
-  const genres = await db.getAllGenres();
-  const authors = await db.getAllAuthors();
+  const [books, genres, authors] = await Promise.all([
+    db.getAllBooks(),
+    db.getAllGenres(),
+    db.getAllAuthors(),
+  ]);
   res.render("index", { books, genres, authors });
 });
 

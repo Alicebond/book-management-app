@@ -42,11 +42,10 @@ async function getBookAuthor(bookid) {
 
 async function getBookGenre(bookid) {
   const { rows } = await pool.query(
-    `SELECT name 
-    FROM genre, book_genre, book 
-    WHERE book.id = book_genre.book_id 
-      AND book_genre.genre_id = genre.id 
-      AND book.id = $1;`,
+    `SELECT genre. name FROM genre 
+    INNER JOIN book_genre 
+    ON book_genre.genre_id = genre.id 
+    WHERE book_genre.book_id = $1`,
     [bookid]
   );
   return rows;
@@ -57,17 +56,16 @@ async function getGenre(genreid) {
     genreid,
   ]);
   const genre = rows[0];
-  console.log(genre);
   const genreBooks = await getGenreBook(genreid);
   return { genre, genreBooks };
 }
 
 async function getGenreBook(genreid) {
   const { rows } = await pool.query(
-    `SELECT book.title, book.url 
-    FROM book, genre, book_genre
-    WHERE book.id = book_genre.book_id
-    AND book_genre.genre_id = $1`,
+    `SELECT book.title, book.url FROM book
+    INNER JOIN book_genre 
+    ON book.id = book_genre.book_id
+    WHERE book_genre.genre_id = $1`,
     [genreid]
   );
   return rows;

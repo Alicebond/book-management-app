@@ -6,7 +6,7 @@
     <div class="genre-main">
       <h2 class="genre-name"><%= genre.name %></h2>
       <div class="genre-book">
-        <% if (genreBooks) {%> <% genreBooks.forEach( (book) => { %>
+        <% if (genreBooks.length) {%> <% genreBooks.forEach( (book) => { %>
         <p>
           <a href="<%= book.url %>"> <%= book.title %> </a>
         </p>

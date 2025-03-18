@@ -9,9 +9,13 @@ exports.genreList = asyncHandler(async (req, res, next) => {
 
 // Display detail of specific genre
 exports.genreDetail = asyncHandler(async (req, res, next) => {
-  const genreid = req.params.id;
+  const genreid = 999; //req.params.id;
   const { genre, genreBooks } = await db.getGenre(genreid);
-  console.log(genreBooks);
+  //genre === undefined
+  if (genre === undefined) {
+    throw new CustomNotFoundError("Genre Not Found");
+  }
+
   res.render("genreDetail", { genre, genreBooks });
 });
 
