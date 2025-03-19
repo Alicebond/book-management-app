@@ -51,7 +51,7 @@ async function getBookGenre(bookid) {
   return rows;
 }
 
-async function getGenre(genreid) {
+async function getGenreDetail(genreid) {
   const { rows } = await pool.query("SELECT * FROM genre WHERE id = $1", [
     genreid,
   ]);
@@ -75,11 +75,37 @@ async function insertNewbook(bookInfo) {
   await pool.query("");
 }
 
+async function getAuthorDetail(authorid) {
+  const { rows } = await pool.query(
+    `
+    SELECT * FROM author
+    WHERE id = $1`,
+    [authorid]
+  );
+  const author = rows[0];
+  const authorBooks = await getAuthorBooks(authorid);
+  return { author, authorBooks };
+}
+
+async function getAuthorBooks(authorid) {
+  const { rows } = await pool.query(
+    `
+    SELECT book.title, book.url
+    FROM book
+    INNER JOIN book_author
+    ON book.id = book_author.book_id
+    WHERE book_author.author_id = $1`,
+    [authorid]
+  );
+  return rows;
+}
+
 module.exports = {
   getAllBooks,
   getAllAuthors,
   getAllGenres,
-  getGenre,
+  getGenreDetail,
+  getAuthorDetail,
   insertNewbook,
   getBookDetail,
 };

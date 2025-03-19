@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 
 //Display list of all books, genres, authors
-exports.lists = asyncHandler(async (req, res) => {
+exports.index = asyncHandler(async (req, res) => {
   const [books, genres, authors] = await Promise.all([
     db.getAllBooks(),
     db.getAllGenres(),

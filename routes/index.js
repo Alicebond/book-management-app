@@ -8,7 +8,7 @@ const genreController = require("../controllers/genreController");
 /// BOOK ROUTES ///
 
 // Get home page, show all books, genres and authors
-router.get("/", bookController.lists);
+router.get("/", bookController.index);
 
 // Get request to add a new book
 router.get("/book/add", bookController.bookAddGet);

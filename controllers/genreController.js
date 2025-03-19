@@ -2,16 +2,10 @@ const db = require("../db/queries");
 const asyncHandler = require("express-async-handler");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 
-// Display list of all genres
-exports.genreList = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: genre list");
-});
-
 // Display detail of specific genre
 exports.genreDetail = asyncHandler(async (req, res, next) => {
-  const genreid = 999; //req.params.id;
-  const { genre, genreBooks } = await db.getGenre(genreid);
-  //genre === undefined
+  const genreid = req.params.id;
+  const { genre, genreBooks } = await db.getGenreDetail(genreid);
   if (genre === undefined) {
     throw new CustomNotFoundError("Genre Not Found");
   }

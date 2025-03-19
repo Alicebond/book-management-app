@@ -36,7 +36,7 @@
       <p>
         <span class="op"> Genre:</span>
         <% genres.forEach((genre) => { %>
-        <span class="ge"><%=genre.name %> </span>
+        <span class="ge"><a href="<%= genre.url %>"><%=genre.name %></a> </span>
       <% }) %>
       </p>
 

@@ -5,7 +5,7 @@
     <%- include ('header') %>
     <div class="genre-main">
       <h2 class="genre-name"><%= genre.name %></h2>
-      <div class="genre-book">
+      <div class="genre-books">
         <% if (genreBooks.length) {%> <% genreBooks.forEach( (book) => { %>
         <p>
           <a href="<%= book.url %>"> <%= book.title %> </a>
