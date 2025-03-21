@@ -71,10 +71,6 @@ async function getGenreBook(genreid) {
   return rows;
 }
 
-async function insertNewbook(bookInfo) {
-  await pool.query("");
-}
-
 async function getAuthorDetail(authorid) {
   const { rows } = await pool.query(
     `
@@ -100,12 +96,16 @@ async function getAuthorBooks(authorid) {
   return rows;
 }
 
+async function insertNewBook(bookInfo) {
+  // await pool.query("");
+}
+
 module.exports = {
   getAllBooks,
   getAllAuthors,
   getAllGenres,
   getGenreDetail,
   getAuthorDetail,
-  insertNewbook,
+  insertNewBook,
   getBookDetail,
 };

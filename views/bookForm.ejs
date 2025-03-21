@@ -6,12 +6,12 @@
     <h2>Add A New Book</h2>
     <form action="/book/add" method="post">
       <p class="new new-title">
-        <label for="title">Title: </label>
-        <input type="text" name="title" id="title" />
+        <label for="title">Title*: </label>
+        <input type="text" name="title" id="title" required/>
       </p>
       <p class="new new-isbn">
-        <label for="isbn">ISBN: </label>
-        <input type="text" name="isbn" id="isbn" />
+        <label for="isbn">ISBN*: </label>
+        <input type="text" name="isbn" id="isbn" required/>
       </p>
       <p class="new new-pages">
         <label for="pages">Pages: </label>
@@ -25,6 +25,7 @@
         <label for="status">Status: </label>
         <select name="status" id="status">
           <option value="">--Please choosee an option</option>
+          <option value="want to read">Want to Read</option>
           <option value="reading">Currently Reading</option>
           <option value="read">Read</option>
         </select>
@@ -33,10 +34,9 @@
         <label for="genre">Genre: </label>
         <input type="text" name="genre" id="genre" />
       </p>
-      <p class="new new-author">
+      <div class="new new-author">
         <fieldset>
           <legend>Author:</legend>
-          <div>
             <p class="firstname">
               <label for="firstname">First Name: </label>
               <input type="text" name="firstname" id="firstname" />
@@ -63,10 +63,8 @@
                 cols="33"
               ></textarea>
             </p>
-          </div>
-        
-      </fieldset>
-      </p>
+          </fieldset>
+      </div>
       <p>
         <label for="overview">Book Overview: </label>
         <textarea name="overview" id="overview" cols="40" rows=5"></textarea>
@@ -75,6 +73,12 @@
         <button type="submit">Submit</button>
       </p>
     </form>
+    <% if(errors) {%>
+      <ul>
+        <% errors.forEach((error) => {%>
+          <li><%= error.msg %></li>
+        <% })} %>
+      </ul>
     <br>
     <%- include('footer') %>
   </body>
