@@ -29,11 +29,10 @@ async function getBookDetail(isbn) {
 
 async function getBookAuthor(bookid) {
   const { rows } = await pool.query(
-    `SELECT name 
-    FROM author, book_author, book 
-    WHERE author.id = book_author.author_id 
-      AND book_author.author_id = book_author.book_id 
-      AND book_author.book_id = ($1);`,
+    `SELECT author.name, author.url 
+    FROM author INNER JOIN book_author
+    ON book_author.author_id = author.id
+    WHERE book_author.book_id = $1`,
     [bookid]
   );
 
@@ -42,7 +41,7 @@ async function getBookAuthor(bookid) {
 
 async function getBookGenre(bookid) {
   const { rows } = await pool.query(
-    `SELECT genre. name FROM genre 
+    `SELECT genre.name, genre.url FROM genre 
     INNER JOIN book_genre 
     ON book_genre.genre_id = genre.id 
     WHERE book_genre.book_id = $1`,
@@ -96,8 +95,110 @@ async function getAuthorBooks(authorid) {
   return rows;
 }
 
+async function addNewBook(bookInfo, authorInfo, genre) {
+  await insertNewBook(bookInfo);
+  await insertNewAuthor(authorInfo);
+  await insertNewGenre(genre);
+  await insetNewBookAuthor(
+    bookInfo.title,
+    authorInfo.firstname,
+    authorInfo.lastname
+  );
+  await insetNewBookGenre(bookInfo.title, genre);
+}
+
 async function insertNewBook(bookInfo) {
-  // await pool.query("");
+  await pool.query(
+    `
+    INSERT INTO book(
+    title, isbn, pages, reading, read, want_to_read, description, language)
+    VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+    `,
+    [
+      bookInfo.title,
+      bookInfo.isbn,
+      bookInfo.pages,
+      bookInfo.reading,
+      bookInfo.read,
+      bookInfo.toRead,
+      bookInfo.description,
+      bookInfo.language,
+    ]
+  );
+}
+
+async function insertNewAuthor(authorInfo) {
+  await pool.query(
+    `
+    INSERT INTO author(
+    first_name, last_name, description, date_of_birth, date_of_death)
+    VALUES($1, $2, $3, $4, $5)`,
+    [
+      authorInfo.firstname,
+      authorInfo.lastname,
+      authorInfo.description,
+      authorInfo.dateOfBirth,
+      authorInfo.dateOfDeath,
+    ]
+  );
+}
+
+async function insertNewGenre(newGenre) {
+  const genreList = await getAllGenres();
+  const exsitedGenre = genreList.some(
+    (genre) => genre.name.toLowerCase() === newGenre.toLowerCase()
+  );
+  if (!exsitedGenre) {
+    await pool.query(
+      `
+    INSERT INTO genre(name)
+    VALUES($1)`,
+      [newGenre]
+    );
+  }
+}
+
+async function insetNewBookAuthor(title, firstname, lastname) {
+  const bookResult = await pool.query(
+    `
+      SELECT id FROM book WHERE title = $1`,
+    [title]
+  );
+
+  const authorResult = await pool.query(
+    `SELECT id FROM author WHERE first_name = $1 and last_name = $2`,
+    [firstname, lastname]
+  );
+
+  const bookid = bookResult.rows[0].id;
+  const authorid = authorResult.rows[0].id;
+
+  await pool.query(
+    `INSERT INTO book_author(book_id, author_id)
+    VALUES($1, $2)`,
+    [bookid, authorid]
+  );
+}
+
+async function insetNewBookGenre(title, genre) {
+  const bookResult = await pool.query(
+    `
+      SELECT id FROM book WHERE title = $1`,
+    [title]
+  );
+
+  const genreResult = await pool.query(`SELECT id FROM genre WHERE name = $1`, [
+    genre,
+  ]);
+
+  const bookid = bookResult.rows[0].id;
+  const genreid = genreResult.rows[0].id;
+
+  await pool.query(
+    `INSERT INTO book_genre (book_id, genre_id)
+    VALUES ($1, $2)`,
+    [bookid, genreid]
+  );
 }
 
 module.exports = {
@@ -106,6 +207,6 @@ module.exports = {
   getAllGenres,
   getGenreDetail,
   getAuthorDetail,
-  insertNewBook,
+  addNewBook,
   getBookDetail,
 };

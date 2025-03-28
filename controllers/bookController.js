@@ -27,7 +27,7 @@ exports.bookDetail = asyncHandler(async (req, res) => {
 
 // Display form to add a new book
 exports.bookAddGet = asyncHandler(async (req, res) => {
-  res.render("bookForm", { errors: false });
+  res.render("bookForm", { newBook: false, errors: false });
 });
 
 // Handle new book infomation on POST
@@ -38,8 +38,8 @@ exports.bookAddPost = [
     .escape()
     .withMessage("Book title must be specified."),
   body("isbn", "ISBN must not be empty.").trim().isLength({ min: 1 }),
-  body("pages").trim().escape(),
-  body("lang").trim().escape(),
+  body("pages", "Pages must be specified.").trim().escape(),
+  body("lang", "Language must be specified.").trim().escape(),
   body("genre", "Genre name must contain at least 3 characters.")
     .trim()
     .isLength({ min: 3 })
@@ -68,26 +68,47 @@ exports.bookAddPost = [
 
   asyncHandler(async (req, res) => {
     const errors = validationResult(req);
-    const newBook = {
+
+    const bookInfo = {
       title: req.body.title,
       isbn: req.body.isbn,
       pages: req.body.pages,
       language: req.body.lang,
-      status: req.body.status,
-      description: req.body.overview,
-      genre: req.body.genre,
+      description: req.body.overview || null,
+      toRead: req.body.status === "want to read",
+      reading: req.body.status === "reading",
+      read: req.body.status === "read",
+    };
+    const authorInfo = {
       firstname: req.body.firstname,
       lastname: req.body.lastname,
-      dateOfBirth: req.body.dateOfBirth,
-      dateOfDeath: req.body.dateOfDeath,
-      aboutAuthor: req.body.aboutAuthor,
+      description: req.body.aboutAuthor || null,
+      dateOfBirth:
+        req.body.dateOfBirth === "" ? null : new Date(req.body.dateOfBirth),
+      dateOfDeath:
+        req.body.dateOfDeath === "" ? null : new Date(newBook.dateOfDeath),
     };
+    const genre = req.body.genre;
 
-    if (!errors.isEmpty()) {
+    const bookList = await db.getAllBooks();
+    const authorList = await db.getAllAuthors();
+    const exsitedBook = bookList.some((book) => book.title === bookInfo.title);
+    const exsitedAuthor = authorList.some(
+      (author) =>
+        author.name === `${authorInfo.firstname} ${authorInfo.lastname}`
+    );
+
+    if (exsitedBook && exsitedAuthor) {
+      res.render("bookForm", {
+        newBook,
+        errors: [{ msg: "Book already exsits." }],
+      });
+      return;
+    } else if (!errors.isEmpty()) {
       res.render("bookForm", { newBook, errors: errors.array() });
       return;
     } else {
-      await db.insertNewBook(newBook);
+      await db.addNewBook(bookInfo, authorInfo, genre);
       res.redirect("/");
     }
   }),
