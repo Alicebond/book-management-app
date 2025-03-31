@@ -26,14 +26,16 @@
         <%= dateAdded %>
       </p>
       <p>
-        <span class="op">Status: </span>
         <% if (book.reading) { %> 
+          <span class="op">Status: </span>
           Currently reading 
-          <% } else if (book.read) { %>  
+        <% } else if (book.read) { %> 
+            <span class="op">Status: </span> 
             <span class="check">&#10004</span> Read 
-          <% } else {%>
+        <% } else if (book.toRead) {%>
+            <span class="op">Status: </span>
             <span>Want to read</span>
-          <% } %>
+        <% } %>
       </p>
       <p>
         <span class="op"> Genre:</span>
@@ -48,8 +50,14 @@
           <span style="white-space: pre-line;"><%=book.description %></span>
         </p>
       </div>
-
     </div>
+    <hr>
+    <p>
+      <a href="<%=book.url%>/update">Update Book</a>
+    </p>
+    <p>
+      <a href="<%=book.url%>/delete">Delete Book</a>
+    </p>
     <%- include ('footer') %>
   </body>
 </html>

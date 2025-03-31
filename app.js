@@ -15,6 +15,11 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/", router);
 
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send(err);
+});
+
 const port = process.env.PORT || 3154;
 app.listen(port, () => {
   console.log(`book management app - listening on port: ${port}`);

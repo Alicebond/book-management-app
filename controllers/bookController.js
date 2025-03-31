@@ -86,25 +86,28 @@ exports.bookAddPost = [
       dateOfBirth:
         req.body.dateOfBirth === "" ? null : new Date(req.body.dateOfBirth),
       dateOfDeath:
-        req.body.dateOfDeath === "" ? null : new Date(newBook.dateOfDeath),
+        req.body.dateOfDeath === "" ? null : new Date(req.body.dateOfDeath),
     };
     const genre = req.body.genre;
 
     const bookList = await db.getAllBooks();
     const authorList = await db.getAllAuthors();
-    const exsitedBook = bookList.some((book) => book.title === bookInfo.title);
+    const exsitedBook = bookList.some((book) => {
+      book.title === bookInfo.title && book.isbn === bookInfo.isbn;
+    });
     const exsitedAuthor = authorList.some(
       (author) =>
         author.name === `${authorInfo.firstname} ${authorInfo.lastname}`
     );
 
-    if (exsitedBook && exsitedAuthor) {
-      res.render("bookForm", {
-        newBook,
-        errors: [{ msg: "Book already exsits." }],
-      });
-      return;
-    } else if (!errors.isEmpty()) {
+    // if (exsitedBook && exsitedAuthor) {
+    //   res.render("bookForm", {
+    //     newBook,
+    //     errors: [{ msg: "Book already exsits." }],
+    //   });
+    //   return;
+    // } else
+    if (!errors.isEmpty()) {
       res.render("bookForm", { newBook, errors: errors.array() });
       return;
     } else {
@@ -114,7 +117,7 @@ exports.bookAddPost = [
   }),
 ];
 
-// Display book update fomr on GET
+// Display book update form on GET
 exports.bookUpdateGet = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: book update get");
 });
