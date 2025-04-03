@@ -43,7 +43,6 @@
         <span class="ge"><a href="<%= genre.url %>"><%=genre.name %></a> </span>
       <% }) %>
       </p>
-
       <div class="ds">
         <p>
           <span class="op">Description:</span>
@@ -51,11 +50,11 @@
         </p>
       </div>
     </div>
-    <hr>
-    <p>
+    <br>
+    <p class="update">
       <a href="<%=book.url%>/update">Update Book</a>
     </p>
-    <p>
+    <p class="delete">
       <a href="<%=book.url%>/delete">Delete Book</a>
     </p>
     <%- include ('footer') %>

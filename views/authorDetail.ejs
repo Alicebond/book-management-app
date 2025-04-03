@@ -10,7 +10,7 @@
         <p class="author-dob">Date of Birth: <%=dateOfBirth%></p>
         <% } %> <% if(dateOfDeath) {%>
         <p class="author-dod">Date of Death: <%=dateOfDeath%></p>
-        <% } %> <% if(description.length) {%>
+        <% } %> <% if(description) {%>
         <p class="author-description">Description: <%=description%></p>
         <% } %>
       </div>
@@ -20,10 +20,17 @@
           <a href="<%= book.url %>"><%= book.title %></a>
         </p>
         <% })} else { %>
-        <p>There are no books of <%= author.name %></p>
+        <p>There are no books of <%=name %></p>
         <% } %>
       </div>
     </div>
+    <br />
+    <p class="update">
+      <a href="<%=url%>/update">Update Author</a>
+    </p>
+    <p class="delete">
+      <a href="<%=url%>/delete">Delete Author</a>
+    </p>
     <%- include ('footer') %>
   </body>
 </html>

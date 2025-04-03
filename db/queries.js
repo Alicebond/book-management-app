@@ -95,30 +95,6 @@ async function getAuthorBooks(authorid) {
   return rows;
 }
 
-async function addNewBook(bookInfo, authorInfo, genreInfo) {
-  const bookList = await getAllBooks();
-  const authorList = await getAllAuthors();
-  const genreList = await getAllGenres();
-
-  const exsitedBook = bookList.some((book) => book.title === bookInfo.title);
-  const exsitedAuthor = authorList.some(
-    (author) => author.name === `${authorInfo.firstname} ${authorInfo.lastname}`
-  );
-  const exsitedGenre = genreList.some(
-    (genre) => genre.name.toLowerCase() === genreInfo.toLowerCase()
-  );
-
-  if (!exsitedBook) await insertNewBook(bookInfo);
-  if (!exsitedAuthor) await insertNewAuthor(authorInfo);
-  if (!exsitedGenre) await insertNewGenre(genreInfo);
-  await insetNewBookAuthor(
-    bookInfo.title,
-    authorInfo.firstname,
-    authorInfo.lastname
-  );
-  await insetNewBookGenre(bookInfo.title, genreInfo);
-}
-
 async function insertNewBook(bookInfo) {
   await pool.query(
     `
@@ -137,6 +113,8 @@ async function insertNewBook(bookInfo) {
       bookInfo.language,
     ]
   );
+  if (bookInfo.authorid) await insetNewBookAuthor(bookInfo);
+  if (bookInfo.genreid.length) await insetNewBookGenre(bookInfo);
 }
 
 async function insertNewAuthor(authorInfo) {
@@ -164,22 +142,22 @@ async function insertNewGenre(newGenre) {
   );
 }
 
-async function insetNewBookAuthor(title, firstname, lastname) {
+async function insetNewBookAuthor(bookInfo) {
+  // the pool.query return a big JS object
+  // with lots of key-value pairs, the result
+  // we want is assigned to a key named: rows
+  // rows is an array, there are JS objects inside
+  // it, usually the first object is the result
+  // of our SQL command
   const bookResult = await pool.query(
     `
-      SELECT id FROM book WHERE title = $1`,
-    [title]
+      SELECT id FROM book WHERE isbn = $1`,
+    [bookInfo.isbn]
   );
   const bookid = bookResult.rows[0].id;
-  if (!bookid) throw new Error(`Book with title ${title} not found.`);
+  if (!bookid) throw new Error(`Book with title ${bookInfo.title} not found.`);
 
-  const authorResult = await pool.query(
-    `SELECT id FROM author WHERE first_name = $1 and last_name = $2`,
-    [firstname, lastname]
-  );
-  const authorid = authorResult.rows[0].id;
-  if (!authorid)
-    throw new Error(`Author "${firstname} ${lastname}" not found.`);
+  const authorid = bookInfo.authorid;
 
   await pool.query(
     `INSERT INTO book_author(book_id, author_id)
@@ -188,26 +166,24 @@ async function insetNewBookAuthor(title, firstname, lastname) {
   );
 }
 
-async function insetNewBookGenre(title, genre) {
+async function insetNewBookGenre(bookInfo) {
   const bookResult = await pool.query(
     `
-      SELECT id FROM book WHERE title = $1`,
-    [title]
+      SELECT id FROM book WHERE isbn = $1`,
+    [bookInfo.isbn]
   );
-  const genreResult = await pool.query(`SELECT id FROM genre WHERE name = $1`, [
-    genre,
-  ]);
-  console.log(bookResult, genreResult);
   const bookid = bookResult.rows[0].id;
-  if (!bookid) throw new Error(`Book "${title}" not found.`);
+  if (!bookid) throw new Error(`Book "${bookInfo.title}" not found.`);
+  const genreidArr = bookInfo.genreid;
 
-  const genreid = genreResult.rows[0].id;
-  if (!genreid) throw new Error();
-
-  await pool.query(
-    `INSERT INTO book_genre (book_id, genre_id)
-    VALUES ($1, $2)`,
-    [bookid, genreid]
+  await Promise.all(
+    genreidArr.map(async (genreid) => {
+      await pool.query(
+        `INSERT INTO book_genre (book_id, genre_id)
+      VALUES ($1, $2)`,
+        [bookid, genreid]
+      );
+    })
   );
 }
 
@@ -217,6 +193,8 @@ module.exports = {
   getAllGenres,
   getGenreDetail,
   getAuthorDetail,
-  addNewBook,
   getBookDetail,
+  insertNewGenre,
+  insertNewAuthor,
+  insertNewBook,
 };

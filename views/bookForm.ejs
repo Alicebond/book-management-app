@@ -3,84 +3,64 @@
   <%- include('head') %>
   <body>
     <%- include('header') %>
-    <h2>Add A New Book</h2>
+    <h3>Add a New Book</h3>
     <form action="/book/add" method="post">
       <p class="new new-title">
         <label for="title">Title*: </label>
         <input type="text" name="title" id="title" required
-        value="<%= newBook ? newBook.title : "" %>"/>
+        value="<%= bookInfo ? bookInfo.title : "" %>"/>
+      </p>
+      <p class="new new-author">
+        <label for="author">Author</label>
+        <select name="author" id="author">
+          <option value="">--Please Select an Author--</option>
+          <% authors.forEach((author) => { %>
+            <option value="<%= author.id %>">
+              <%= author.name %>
+            </option>
+          <% }) %>
+        </select>
       </p>
       <p class="new new-isbn">
         <label for="isbn">ISBN*: </label>
         <input type="text" name="isbn" id="isbn" required
-        value="<%= newBook ? newBook.isbn : "" %>"/>
+        value="<%= bookInfo ? bookInfo.isbn : "" %>"/>
       </p>
       <p class="new new-pages">
         <label for="pages">Pages*: </label>
         <input type="number" name="pages" id="pages" 
-        value="<%= newBook ? newBook.pages : "" %>" required/>
+        value="<%= bookInfo ? bookInfo.pages : "" %>" required/>
       </p>
       <p class="new new-lang">
         <label for="lang">Language*: </label>
         <input type="text" name="lang" id="lang" 
-        value="<%= newBook ? newBook.language : "" %>" required/>
+        value="<%= bookInfo ? bookInfo.language : "" %>" required/>
       </p>
       <p class="new new-status">
         <label for="status">Status: </label>
         <select name="status" id="status">
-          <option value="">--Please choosee an option</option>
+          <option value="">--Please choosee an option--</option>
           <option value="want to read"
-          <%= newBook.status === "want to read" ? 'selected' : "" %>>Want to Read</option>
+          <%= bookInfo.toRead ? 'selected' : "" %>>Want to Read</option>
           <option value="reading"
-          <%= newBook.status === "reading" ? 'selected' : "" %>>Currently Reading</option>
+          <%= bookInfo.reading ? 'selected' : "" %>>Currently Reading</option>
           <option value="read" 
-          <%= newBook.status === "read" ? 'selected' : "" %>>Read</option>
+          <%= bookInfo.read ? 'selected' : "" %>>Read</option>
         </select>
       </p>
       <p class="new new-genre">
-        <label for="genre">Genre*: </label>
-        <input type="text" name="genre" id="genre" 
-        value="<%= newBook ? newBook.genre : "" %>"required/>
+        <label for="genre">Genre: </label>
+        <% genres.forEach((genre) => { %>
+          <% if (genre.checked) { %>
+            <input type="checkbox", name="genre", id="<%= genre.id %>", value="<%= genre.id %>" checked/>
+          <% } else { %>
+            <input type="checkbox", name="genre", id="<%= genre.id %>", value="<%= genre.id %>" />
+          <% } %><label for="<%= genre.id %>"><%= genre.name %></label>
+        <% }) %>
       </p>
-      <div class="new new-author">
-        <fieldset>
-          <legend>Author:</legend>
-            <p class="firstname">
-              <label for="firstname">First Name*: </label>
-              <input type="text" name="firstname" id="firstname" 
-              value="<%= newBook ? newBook.firstname : "" %>" required/>
-            </p>
-            <p class="lastname">
-              <label for="lastname">Last Name*: </label>
-              <input type="text" name="lastname" id="lastname" 
-              value="<%= newBook ? newBook.lastname : "" %>" required/>
-            </p>
-            <p>
-              <label for="date-of-birth">Date of Birth: </label>
-              <input type="date" name="dateOfBirth" id="date-of-birth"
-              value="<%= newBook ? newBook.dateOfBirth : "" %>">
-            </p>
-            <p>
-              <label for="date-of-death">Date of Death: </label>
-              <input type="date" name="dateOfDeath" id="date-of-death"
-              value="<%= newBook ? newBook.dateOfDeath : "" %>">
-            </p>
-            <p class="about-author">
-              <label for="about-author">About: </label>
-              <textarea
-                type="text"
-                name="aboutAuthor"
-                id="about-author"
-                rows="3"
-                cols="33"
-                value=""
-              ><%= newBook ? newBook.aboutAuthor : "" %></textarea>
-            </p>
-          </fieldset>
-      </div>
       <p>
-        <label for="overview">Book Overview: </label>
-        <textarea name="overview" id="overview" cols="40" rows=5"><%= newBook ? newBook.description : "" %></textarea>
+        <label class="overview" for="overview">Book Overview: </label>
+        <textarea class="overview" name="overview" id="overview" cols="40" rows=5"><%= bookInfo ? bookInfo.description : "" %></textarea>
       </p>
       <p>
         <button type="submit">Submit</button>
@@ -90,8 +70,8 @@
       <ul class="errors">
         <% errors.forEach((error) => {%>
           <li><%= error.msg %></li>
-        <% })} %>
       </ul>
+    <% })} %>
     <br>
     <%- include('footer') %>
   </body>

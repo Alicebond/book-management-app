@@ -19,7 +19,7 @@ header {
 }
 
 .book-info p {
-  margin: 10px;
+  margin: 4px 0;
 }
 
 .op {
@@ -60,6 +60,18 @@ header {
 .genres-title,
 .authors-title {
   margin-bottom: 0;
+}
+
+.new-genre input {
+  margin: 0;
+}
+
+.new-genre label {
+  margin-right: 10px;
+}
+
+.overview {
+  display: block;
 }
 
 .errors {

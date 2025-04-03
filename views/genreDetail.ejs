@@ -11,10 +11,16 @@
           <a href="<%= book.url %>"> <%= book.title %> </a>
         </p>
         <%} ) %> <% } else { %>
-        <p>There are no books, try add one <a href="/book/add">here</a></p>
+        <p>There are no genres, try add one <a href="/genre/add">here</a></p>
         <% } %>
       </div>
     </div>
+    <p class="update">
+      <a href="<%=genre.url%>/update">Update Book</a>
+    </p>
+    <p class="delete">
+      <a href="<%=genre.url%>/delete">Delete Book</a>
+    </p>
     <%- include ('footer') %>
   </body>
 </html>

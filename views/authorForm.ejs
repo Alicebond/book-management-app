@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('head') %>
+  <body>
+    <%- include('header') %>
+    <h3>Add as New Author</h3>
+    <div class="new new-author">
+      <form action="/author/add" method="post">
+        <p class="firstname">
+          <label for="firstname">First Name*: </label>
+          <input type="text" name="firstname" id="firstname" value="<%=
+          authorInfo ? authorInfo.firstname : "" %>" required/>
+        </p>
+        <p class="lastname">
+          <label for="lastname">Last Name*: </label>
+          <input type="text" name="lastname" id="lastname" value="<%= authorInfo
+          ? authorInfo.lastname : "" %>" required/>
+        </p>
+        <p>
+          <label for="date-of-birth">Date of Birth: </label>
+          <input type="date" name="dateOfBirth" id="date-of-birth" value="<%=
+          authorInfo ? authorInfo.dateOfBirth : "" %>">
+        </p>
+        <p>
+          <label for="date-of-death">Date of Death: </label>
+          <input type="date" name="dateOfDeath" id="date-of-death" value="<%=
+          authorInfo ? authorInfo.dateOfDeath : "" %>">
+        </p>
+        <p class="about-author">
+          <label class="overview" for="about-author">About: </label>
+          <textarea
+            class="overview"
+            type="text"
+            name="aboutAuthor"
+            id="about-author"
+            rows="3"
+            cols="33"
+          >
+<%= authorInfo ? authorInfo.description : "" %></textarea
+          >
+        </p>
+        <p>
+          <button type="submit">Submit</button>
+        </p>
+      </form>
+      <% if(errors) {%>
+      <ul class="errors">
+        <% errors.forEach((error) => {%>
+        <li><%= error.msg %></li>
+      </ul>
+      <% })} %>
+    </div>
+    <br />
+    <%- include('footer') %>
+  </body>
+</html>

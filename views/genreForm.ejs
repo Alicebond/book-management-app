@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('head') %>
+  <body>
+    <%- include('header') %>
+    <h3>Add a New Genre</h3>
+    <form action="/genre/add" method="post">
+      <p class="new new-genre">
+        <label for="genre">Genre: </label>
+        <input type="text" name="genre" id="genre" value="<% genre ? genre : ""
+        %>"/>
+      </p>
+      <p>
+        <button type="submit">Submit</button>
+      </p>
+    </form>
+    <% if(errors) {%>
+    <ul class="errors">
+      <% errors.forEach((error) => {%>
+      <li><%= error.msg %></li>
+    </ul>
+    <% })} %>
+    <br />
+    <%- include('footer') %>
+  </body>
+</html>

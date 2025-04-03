@@ -27,44 +27,42 @@ exports.bookDetail = asyncHandler(async (req, res) => {
 
 // Display form to add a new book
 exports.bookAddGet = asyncHandler(async (req, res) => {
-  res.render("bookForm", { newBook: false, errors: false });
+  const genres = await db.getAllGenres();
+  const authors = await db.getAllAuthors();
+  res.render("bookForm", {
+    genres,
+    authors,
+    bookInfo: false,
+    authorInfo: false,
+    errors: false,
+  });
 });
 
 // Handle new book infomation on POST
 exports.bookAddPost = [
+  // Convert the genre to an array
+  (req, res, next) => {
+    if (!Array.isArray(req.body.genre)) {
+      req.body.genre =
+        typeof req.body.genre === "undefined" ? [] : [req.body.genre];
+    }
+    next();
+  },
+
   body("title")
     .trim()
     .isLength({ min: 1 })
     .escape()
     .withMessage("Book title must be specified."),
+  body("author", "Author must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
   body("isbn", "ISBN must not be empty.").trim().isLength({ min: 1 }),
   body("pages", "Pages must be specified.").trim().escape(),
   body("lang", "Language must be specified.").trim().escape(),
-  body("genre", "Genre name must contain at least 3 characters.")
-    .trim()
-    .isLength({ min: 3 })
-    .escape(),
-  body("firstname")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("First name must be specified."),
-  body("lastname")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("Last name must be specified."),
-  body("date-of-birth", "Invalid date of birth.")
-    .optional({ values: "falsy" })
-    .isISO8601()
-    .toDate(),
-
-  body("date-of-death", "Invalid date of birth.")
-    .optional({ values: "falsy" })
-    .isISO8601()
-    .toDate(),
-  body("about-author").trim().escape(),
   body("overview").trim().escape(),
+  body("genre.*").escape(),
 
   asyncHandler(async (req, res) => {
     const errors = validationResult(req);
@@ -78,40 +76,29 @@ exports.bookAddPost = [
       toRead: req.body.status === "want to read",
       reading: req.body.status === "reading",
       read: req.body.status === "read",
+      authorid: req.body.author,
+      genreid: req.body.genre,
     };
-    const authorInfo = {
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      description: req.body.aboutAuthor || null,
-      dateOfBirth:
-        req.body.dateOfBirth === "" ? null : new Date(req.body.dateOfBirth),
-      dateOfDeath:
-        req.body.dateOfDeath === "" ? null : new Date(req.body.dateOfDeath),
-    };
-    const genre = req.body.genre;
-
+    console.log(bookInfo);
     const bookList = await db.getAllBooks();
-    const authorList = await db.getAllAuthors();
     const exsitedBook = bookList.some((book) => {
       book.title === bookInfo.title && book.isbn === bookInfo.isbn;
     });
-    const exsitedAuthor = authorList.some(
-      (author) =>
-        author.name === `${authorInfo.firstname} ${authorInfo.lastname}`
-    );
 
-    // if (exsitedBook && exsitedAuthor) {
-    //   res.render("bookForm", {
-    //     newBook,
-    //     errors: [{ msg: "Book already exsits." }],
-    //   });
-    //   return;
-    // } else
-    if (!errors.isEmpty()) {
-      res.render("bookForm", { newBook, errors: errors.array() });
+    if (exsitedBook) {
+      res.render("bookForm", {
+        bookInfo,
+        errors: [{ msg: "Book already exsits." }],
+      });
+      return;
+    } else if (!errors.isEmpty()) {
+      res.render("bookForm", {
+        bookInfo,
+        errors: errors.array(),
+      });
       return;
     } else {
-      await db.addNewBook(bookInfo, authorInfo, genre);
+      await db.insertNewBook(bookInfo);
       res.redirect("/");
     }
   }),
@@ -119,6 +106,11 @@ exports.bookAddPost = [
 
 // Display book update form on GET
 exports.bookUpdateGet = asyncHandler(async (req, res, next) => {
+  const isbn = req.params.isbn;
+  const { bookInfo, authorInfo, genres } = await db.getBookDetail(isbn);
+  const dateAdded = DateTime.fromJSDate(book.added).toLocaleString(
+    DateTime.DATE_MED
+  );
   res.send("NOT IMPLEMENTED: book update get");
 });
 

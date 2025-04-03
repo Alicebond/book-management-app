@@ -37,6 +37,12 @@ router.post("/book/:isbn/delete", bookController.bookDeletePost);
 
 /// Author Routes ///
 
+// Get to add a new author
+router.get("/author/add", authorController.authorAddGet);
+
+// Post to add a new author
+router.post("/author/add", authorController.authorAddPost);
+
 // Get author detail, delete form, update form
 router.get("/author/:id", authorController.authorDetail);
 
@@ -53,6 +59,12 @@ router.get("/author/:id/delete");
 router.post("/author/:id/delete", authorController.authorDeletePost);
 
 /// Genre Routes ///
+
+// Get to add a new genre
+router.get("/genre/add", genreController.genreAddGet);
+
+// Post to add a new genre
+router.post("/genre/add", genreController.genreAddPost);
 
 // Get a specific genre
 router.get("/genre/:id", genreController.genreDetail);
