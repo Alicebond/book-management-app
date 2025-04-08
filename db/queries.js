@@ -145,7 +145,7 @@ async function insertNewGenre(newGenre) {
 async function insetNewBookAuthor(bookInfo) {
   // the pool.query return a big JS object
   // with lots of key-value pairs, the result
-  // we want is assigned to a key named: rows
+  // we want is assigned to a key named: rows,
   // rows is an array, there are JS objects inside
   // it, usually the first object is the result
   // of our SQL command

@@ -2,6 +2,7 @@ const db = require("../db/queries");
 const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const entities = require("entities");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 
 //Display list of all books, genres, authors
@@ -21,6 +22,8 @@ exports.bookDetail = asyncHandler(async (req, res) => {
   const dateAdded = DateTime.fromJSDate(book.added).toLocaleString(
     DateTime.DATE_MED
   );
+  const des = entities.decodeHTML5(book.description);
+  book.description = des;
 
   res.render("bookDetail", { book, dateAdded, author, genres });
 });
@@ -79,7 +82,7 @@ exports.bookAddPost = [
       authorid: req.body.author,
       genreid: req.body.genre,
     };
-    console.log(bookInfo);
+
     const bookList = await db.getAllBooks();
     const exsitedBook = bookList.some((book) => {
       book.title === bookInfo.title && book.isbn === bookInfo.isbn;

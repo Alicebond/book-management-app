@@ -2,6 +2,7 @@ const db = require("../db/queries");
 const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const entities = require("entities");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 
 // Display detail page for specific author
@@ -11,7 +12,7 @@ exports.authorDetail = asyncHandler(async (req, res, next) => {
   if (!author) throw new CustomNotFoundError("Author Not Found");
 
   const name = author.name;
-  const description = author.description || false;
+  const description = entities.decodeHTML5(author.description) || false;
   let dateOfBirth = undefined;
   let dateOfDeath = undefined;
   if (author.date_of_birth)
