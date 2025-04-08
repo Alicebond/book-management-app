@@ -4,58 +4,60 @@
   <body>
     <%- include ('header') %>
     <div class="book-info">
-      <h2><%= book.title %></h2>
+      <h2><%= bookInfo.title %></h2>
       <p>
         <span class="op">Author:</span>
-        <a href="<%= author.url %>"><i><%= author.name %></i></a>
+        <a href="<%= bookAuthor.url %>"><i><%= bookAuthor.name %></i></a>
       </p>
       <p>
         <span class="op">ISBN:</span>
-        <%= book.isbn %>
+        <%= bookInfo.isbn %>
       </p>
       <p>
         <span class="op">Pages:</span>
-        <%= book.pages %>
+        <%= bookInfo.pages %>
       </p>
       <p>
         <span class="op">Language:</span>
-        <span><%= book.language %></span>
+        <span><%= bookInfo.language %></span>
       </p>
       <p>
         <span class="op">Date Added:</span>
         <%= dateAdded %>
       </p>
       <p>
-        <% if (book.reading) { %> 
+        <% if (bookInfo.reading) { %> 
           <span class="op">Status: </span>
           Currently reading 
-        <% } else if (book.read) { %> 
+        <% } else if (bookInfo.read) { %> 
             <span class="op">Status: </span> 
             <span class="check">&#10004</span> Read 
-        <% } else if (book.toRead) {%>
+        <% } else if (bookInfo.toRead) {%>
             <span class="op">Status: </span>
             <span>Want to read</span>
         <% } %>
       </p>
       <p>
         <span class="op"> Genre:</span>
-        <% genres.forEach((genre) => { %>
+        <% bookGenres.forEach((genre) => { %>
         <span class="ge"><a href="<%= genre.url %>"><%=genre.name %></a> </span>
       <% }) %>
       </p>
+      <% if(bookInfo.description) {%>
       <div class="ds">
         <p>
           <span class="op">Description:</span>
-          <span style="white-space: pre-line;"><%=book.description %></span>
+          <span style="white-space: pre-line;"><%=bookInfo.description %></span>
         </p>
       </div>
+      <% } %>
     </div>
     <br>
     <p class="update">
-      <a href="<%=book.url%>/update">Update Book</a>
+      <a href="<%=bookInfo.url%>/update">Update Book</a>
     </p>
     <p class="delete">
-      <a href="<%=book.url%>/delete">Delete Book</a>
+      <a href="<%=bookInfo.url%>/delete">Delete Book</a>
     </p>
     <%- include ('footer') %>
   </body>

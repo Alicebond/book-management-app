@@ -12,7 +12,9 @@ exports.authorDetail = asyncHandler(async (req, res, next) => {
   if (!author) throw new CustomNotFoundError("Author Not Found");
 
   const name = author.name;
-  const description = entities.decodeHTML5(author.description) || false;
+  const description = author.description
+    ? entities.decodeHTML5(author.description)
+    : false;
   let dateOfBirth = undefined;
   let dateOfDeath = undefined;
   if (author.date_of_birth)

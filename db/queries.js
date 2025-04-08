@@ -20,17 +20,16 @@ async function getBookDetail(isbn) {
     isbn,
   ]);
 
-  const book = rows[0];
-  const author = await getBookAuthor(book.id);
-  const genres = await getBookGenre(book.id);
-
-  return { book, author, genres };
+  const bookInfo = rows[0];
+  const bookAuthor = await getBookAuthor(bookInfo.id);
+  const bookGenres = await getBookGenre(bookInfo.id);
+  return { bookInfo, bookAuthor, bookGenres };
 }
 
 async function getBookAuthor(bookid) {
   const { rows } = await pool.query(
-    `SELECT author.name, author.url 
-    FROM author INNER JOIN book_author
+    `SELECT * FROM author 
+    INNER JOIN book_author
     ON book_author.author_id = author.id
     WHERE book_author.book_id = $1`,
     [bookid]
@@ -41,7 +40,7 @@ async function getBookAuthor(bookid) {
 
 async function getBookGenre(bookid) {
   const { rows } = await pool.query(
-    `SELECT genre.name, genre.url FROM genre 
+    `SELECT * FROM genre 
     INNER JOIN book_genre 
     ON book_genre.genre_id = genre.id 
     WHERE book_genre.book_id = $1`,

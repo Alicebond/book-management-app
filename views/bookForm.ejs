@@ -2,77 +2,95 @@
 <html lang="en">
   <%- include('head') %>
   <body>
-    <%- include('header') %>
-    <h3>Add a New Book</h3>
+    <%- include('header') %> 
+    <% if (title === "update") {%>
+      <h3>Update Book</h3>
+    <% } else { %>
+      <h3>Add a New Book</h3>
+    <% } %>
     <form action="/book/add" method="post">
       <p class="new new-title">
         <label for="title">Title*: </label>
-        <input type="text" name="title" id="title" required
-        value="<%= bookInfo ? bookInfo.title : "" %>"/>
+        <input type="text" name="title" id="title" required value="<%= bookInfo
+        ? bookInfo.title : "" %>"/>
       </p>
       <p class="new new-author">
         <label for="author">Author</label>
         <select name="author" id="author">
           <option value="">--Please Select an Author--</option>
-          <% authors.forEach((author) => { %>
-            <option value="<%= author.id %>">
-              <%= author.name %>
-            </option>
+          <% authors.forEach((author) => { %> 
+            <% if (bookAuthor && author.id === bookAuthor.id) {%>
+              <option value="<%= author.id %>" selected><%= author.name %></option>
+            <%} else { %>
+            <option value="<%= author.id %>"><%= author.name %></option>
+            <% } %> 
           <% }) %>
         </select>
       </p>
       <p class="new new-isbn">
         <label for="isbn">ISBN*: </label>
-        <input type="text" name="isbn" id="isbn" required
-        value="<%= bookInfo ? bookInfo.isbn : "" %>"/>
+        <input type="text" name="isbn" id="isbn" required value="<%= bookInfo ?
+        bookInfo.isbn : "" %>"/>
       </p>
       <p class="new new-pages">
         <label for="pages">Pages*: </label>
-        <input type="number" name="pages" id="pages" 
-        value="<%= bookInfo ? bookInfo.pages : "" %>" required/>
+        <input type="number" name="pages" id="pages" value="<%= bookInfo ?
+        bookInfo.pages : "" %>" required/>
       </p>
       <p class="new new-lang">
         <label for="lang">Language*: </label>
-        <input type="text" name="lang" id="lang" 
-        value="<%= bookInfo ? bookInfo.language : "" %>" required/>
+        <input type="text" name="lang" id="lang" value="<%= bookInfo ?
+        bookInfo.language : "" %>" required/>
       </p>
       <p class="new new-status">
         <label for="status">Status: </label>
         <select name="status" id="status">
           <option value="">--Please choosee an option--</option>
-          <option value="want to read"
-          <%= bookInfo.toRead ? 'selected' : "" %>>Want to Read</option>
-          <option value="reading"
-          <%= bookInfo.reading ? 'selected' : "" %>>Currently Reading</option>
-          <option value="read" 
-          <%= bookInfo.read ? 'selected' : "" %>>Read</option>
+          <option value="want to read" <%= bookInfo.want_to_read ? 'selected' : "" %>
+          >Want to Read</option>
+          <option value="reading" <%= bookInfo.reading ? 'selected' : "" %> >
+            Currently Reading </option>
+          <option value="read" <%=
+          bookInfo.read ? 'selected' : "" %> >Read</option>
         </select>
       </p>
       <p class="new new-genre">
         <label for="genre">Genre: </label>
-        <% genres.forEach((genre) => { %>
-          <% if (genre.checked) { %>
-            <input type="checkbox", name="genre", id="<%= genre.id %>", value="<%= genre.id %>" checked/>
-          <% } else { %>
-            <input type="checkbox", name="genre", id="<%= genre.id %>", value="<%= genre.id %>" />
-          <% } %><label for="<%= genre.id %>"><%= genre.name %></label>
+        <% genres.forEach((genre) => { %> <% if (genre.checked) { %>
+        <input
+          type="checkbox"
+          name="genre"
+          id="<%= genre.id %>"
+          value="<%= genre.id %>"
+          checked
+        />
+        <% } else { %>
+        <input
+          type="checkbox"
+          name="genre"
+          id="<%= genre.id %>"
+          value="<%= genre.id %>"
+        />
+        <% } %><label for="<%= genre.id %>"><%= genre.name %></label>
         <% }) %>
       </p>
       <p>
         <label class="overview" for="overview">Book Overview: </label>
-        <textarea class="overview" name="overview" id="overview" cols="40" rows=5"><%= bookInfo ? bookInfo.description : "" %></textarea>
+        <textarea class="overview" name="overview" id="overview" cols="40"
+        rows=5"><%= bookInfo ? bookInfo.description : "" %>
+        </textarea>
       </p>
       <p>
         <button type="submit">Submit</button>
       </p>
     </form>
     <% if(errors) {%>
-      <ul class="errors">
-        <% errors.forEach((error) => {%>
-          <li><%= error.msg %></li>
-      </ul>
+    <ul class="errors">
+      <% errors.forEach((error) => {%>
+      <li><%= error.msg %></li>
+    </ul>
     <% })} %>
-    <br>
+    <br />
     <%- include('footer') %>
   </body>
 </html>

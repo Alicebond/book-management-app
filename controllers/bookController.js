@@ -18,14 +18,15 @@ exports.index = asyncHandler(async (req, res) => {
 // Display detail of a specific book
 exports.bookDetail = asyncHandler(async (req, res) => {
   const isbn = req.params.isbn;
-  const { book, author, genres } = await db.getBookDetail(isbn);
-  const dateAdded = DateTime.fromJSDate(book.added).toLocaleString(
+  const { bookInfo, bookAuthor, bookGenres } = await db.getBookDetail(isbn);
+  const dateAdded = DateTime.fromJSDate(bookInfo.added).toLocaleString(
     DateTime.DATE_MED
   );
-  const des = entities.decodeHTML5(book.description);
-  book.description = des;
+  bookInfo.description = bookInfo.description
+    ? entities.decodeHTML5(bookInfo.description)
+    : false;
 
-  res.render("bookDetail", { book, dateAdded, author, genres });
+  res.render("bookDetail", { bookInfo, dateAdded, bookAuthor, bookGenres });
 });
 
 // Display form to add a new book
@@ -33,10 +34,11 @@ exports.bookAddGet = asyncHandler(async (req, res) => {
   const genres = await db.getAllGenres();
   const authors = await db.getAllAuthors();
   res.render("bookForm", {
+    title: false,
     genres,
     authors,
     bookInfo: false,
-    authorInfo: false,
+    bookAuthor: false,
     errors: false,
   });
 });
@@ -90,12 +92,14 @@ exports.bookAddPost = [
 
     if (exsitedBook) {
       res.render("bookForm", {
+        title: false,
         bookInfo,
         errors: [{ msg: "Book already exsits." }],
       });
       return;
     } else if (!errors.isEmpty()) {
       res.render("bookForm", {
+        title: false,
         bookInfo,
         errors: errors.array(),
       });
@@ -110,11 +114,26 @@ exports.bookAddPost = [
 // Display book update form on GET
 exports.bookUpdateGet = asyncHandler(async (req, res, next) => {
   const isbn = req.params.isbn;
-  const { bookInfo, authorInfo, genres } = await db.getBookDetail(isbn);
-  const dateAdded = DateTime.fromJSDate(book.added).toLocaleString(
+  const { bookInfo, bookAuthor, bookGenres } = await db.getBookDetail(isbn);
+  const dateAdded = DateTime.fromJSDate(bookInfo.added).toLocaleString(
     DateTime.DATE_MED
   );
-  res.send("NOT IMPLEMENTED: book update get");
+  const authors = await db.getAllAuthors();
+  const genres = await db.getAllGenres();
+  const bookGenresId = bookGenres.map((genre) => genre.id);
+  genres.forEach((genre) => {
+    if (bookGenresId.includes(genre.id)) genre.checked = true;
+  });
+
+  res.render("bookForm", {
+    title: "update",
+    bookInfo,
+    bookAuthor,
+    genres,
+    authors,
+    dateAdded,
+    errors: false,
+  });
 });
 
 // Display book update fomr on GET
