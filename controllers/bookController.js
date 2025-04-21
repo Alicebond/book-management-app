@@ -17,8 +17,8 @@ exports.index = asyncHandler(async (req, res) => {
 
 // Display detail of a specific book
 exports.bookDetail = asyncHandler(async (req, res) => {
-  const isbn = req.params.isbn;
-  const { bookInfo, bookAuthor, bookGenres } = await db.getBookDetail(isbn);
+  const id = req.params.id;
+  const { bookInfo, bookAuthor, bookGenres } = await db.getBookDetail(id);
   const dateAdded = DateTime.fromJSDate(bookInfo.added).toLocaleString(
     DateTime.DATE_MED
   );
@@ -113,14 +113,17 @@ exports.bookAddPost = [
 
 // Display book update form on GET
 exports.bookUpdateGet = asyncHandler(async (req, res, next) => {
-  const isbn = req.params.isbn;
-  const { bookInfo, bookAuthor, bookGenres } = await db.getBookDetail(isbn);
-  const dateAdded = DateTime.fromJSDate(bookInfo.added).toLocaleString(
-    DateTime.DATE_MED
-  );
+  const id = req.params.id;
+  const { bookInfo, bookAuthor, bookGenres } = await db.getBookDetail(id);
+
   const authors = await db.getAllAuthors();
   const genres = await db.getAllGenres();
   const bookGenresId = bookGenres.map((genre) => genre.id);
+
+  bookInfo.description = bookInfo.description
+    ? entities.decodeHTML5(bookInfo.description)
+    : false;
+
   genres.forEach((genre) => {
     if (bookGenresId.includes(genre.id)) genre.checked = true;
   });
@@ -131,15 +134,84 @@ exports.bookUpdateGet = asyncHandler(async (req, res, next) => {
     bookAuthor,
     genres,
     authors,
-    dateAdded,
     errors: false,
   });
 });
 
-// Display book update fomr on GET
-exports.bookUpdatePost = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: book update post");
-});
+// Handle book update form on Post
+exports.bookUpdatePost = [
+  // Convert the genre to an array
+  (req, res, next) => {
+    if (!Array.isArray(req.body.genre)) {
+      req.body.genre =
+        typeof req.body.genre === "undefined" ? [] : [req.body.genre];
+    }
+    next();
+  },
+
+  body("title")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Book title must be specified."),
+  body("author", "Author must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("isbn", "ISBN must not be empty.").trim().isLength({ min: 1 }),
+  body("pages", "Pages must be specified.").trim().escape(),
+  body("lang", "Language must be specified.").trim().escape(),
+  body("overview").trim().escape(),
+  body("genre.*").escape(),
+
+  asyncHandler(async (req, res, next) => {
+    // Extract the validation errors from a request
+    const errors = validationResult(req);
+
+    const updatedBook = {
+      title: req.body.title,
+      isbn: req.body.isbn,
+      pages: req.body.pages,
+      language: req.body.lang,
+      description: req.body.overview || null,
+      want_to_read: req.body.status === "want to read",
+      reading: req.body.status === "reading",
+      read: req.body.status === "read",
+      authorid: req.body.author,
+      genreid: req.body.genre,
+    };
+
+    const id = req.params.id;
+    const { bookInfo, bookAuthor, bookGenres } = await db.getBookDetail(id);
+
+    const authors = await db.getAllAuthors();
+    const genres = await db.getAllGenres();
+    const bookGenresId = bookGenres.map((genre) => genre.id);
+
+    genres.forEach((genre) => {
+      if (bookGenresId.includes(genre.id)) genre.checked = true;
+    });
+
+    updatedBook.description = updatedBook.description
+      ? entities.decodeHTML5(updatedBook.description)
+      : false;
+
+    if (!errors.isEmpty()) {
+      res.render("bookForm", {
+        title: "update",
+        bookInfo: updatedBook,
+        bookAuthor,
+        genres,
+        authors,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      const book = await db.updateBook(updatedBook, id);
+      res.redirect(`${book.url}`);
+    }
+  }),
+];
 
 // Display book delete form on GET
 exports.bookDeleteGet = asyncHandler(async (req, res, next) => {

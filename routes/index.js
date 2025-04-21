@@ -21,19 +21,19 @@ router.post("/book/add", [
 ]);
 
 // Get book details
-router.get("/book/:isbn", bookController.bookDetail);
+router.get("/book/:id", bookController.bookDetail);
 
 // Get to update a book
-router.get("/book/:isbn/update", bookController.bookUpdateGet);
+router.get("/book/:id/update", bookController.bookUpdateGet);
 
 // Post to update a book
-router.post("/book/:isbn/update", bookController.bookUpdatePost);
+router.post("/book/:id/update", bookController.bookUpdatePost);
 
 // Get to delete a book
-router.get("/book/:isbn/delete", bookController.bookDeleteGet);
+router.get("/book/:id/delete", bookController.bookDeleteGet);
 
 // Post to delete a book
-router.post("/book/:isbn/delete", bookController.bookDeletePost);
+router.post("/book/:id/delete", bookController.bookDeletePost);
 
 /// Author Routes ///
 

@@ -15,14 +15,12 @@ async function getAllAuthors() {
   return rows;
 }
 
-async function getBookDetail(isbn) {
-  const { rows } = await pool.query(`SELECT * FROM book WHERE isbn = ($1)`, [
-    isbn,
-  ]);
+async function getBookDetail(id) {
+  const { rows } = await pool.query(`SELECT * FROM book WHERE id = ($1)`, [id]);
 
   const bookInfo = rows[0];
-  const bookAuthor = await getBookAuthor(bookInfo.id);
-  const bookGenres = await getBookGenre(bookInfo.id);
+  const bookAuthor = await getBookAuthor(id);
+  const bookGenres = await getBookGenre(id);
   return { bookInfo, bookAuthor, bookGenres };
 }
 
@@ -34,7 +32,6 @@ async function getBookAuthor(bookid) {
     WHERE book_author.book_id = $1`,
     [bookid]
   );
-
   return rows[0];
 }
 
@@ -112,8 +109,8 @@ async function insertNewBook(bookInfo) {
       bookInfo.language,
     ]
   );
-  if (bookInfo.authorid) await insetNewBookAuthor(bookInfo);
-  if (bookInfo.genreid.length) await insetNewBookGenre(bookInfo);
+  if (bookInfo.authorid) await insertNewBookAuthor(bookInfo);
+  if (bookInfo.genreid.length) await insertNewBookGenre(bookInfo);
 }
 
 async function insertNewAuthor(authorInfo) {
@@ -141,7 +138,7 @@ async function insertNewGenre(newGenre) {
   );
 }
 
-async function insetNewBookAuthor(bookInfo) {
+async function insertNewBookAuthor(bookInfo) {
   // the pool.query return a big JS object
   // with lots of key-value pairs, the result
   // we want is assigned to a key named: rows,
@@ -165,12 +162,10 @@ async function insetNewBookAuthor(bookInfo) {
   );
 }
 
-async function insetNewBookGenre(bookInfo) {
-  const bookResult = await pool.query(
-    `
-      SELECT id FROM book WHERE isbn = $1`,
-    [bookInfo.isbn]
-  );
+async function insertNewBookGenre(bookInfo) {
+  const bookResult = await pool.query(`SELECT id FROM book WHERE isbn = $1`, [
+    bookInfo.isbn,
+  ]);
   const bookid = bookResult.rows[0].id;
   if (!bookid) throw new Error(`Book "${bookInfo.title}" not found.`);
   const genreidArr = bookInfo.genreid;
@@ -186,6 +181,71 @@ async function insetNewBookGenre(bookInfo) {
   );
 }
 
+async function updateBook(updatedBook, bookid) {
+  const bookResult = await pool.query(`SELECT * FROM book WHERE id = $1`, [
+    bookid,
+  ]);
+  const bookInfo = bookResult.rows[0];
+  const bookAuthor = await getBookAuthor(bookid);
+
+  const updatedBookColumns = [],
+    bookValues = [];
+  let index = 0;
+
+  for (const key in updatedBook) {
+    if (updatedBook[key] !== bookInfo[key]) {
+      if (key === "authorid" || key === "genreid") continue;
+      updatedBookColumns.push(`${key} = $${index + 1}`);
+      bookValues.push(updatedBook[key]);
+      index++;
+    }
+  }
+
+  if (updatedBookColumns.length > 0) {
+    const query = `UPDATE book SET ${updatedBookColumns.join(
+      ", "
+    )} WHERE id = $${index + 1}`;
+    bookValues.push(bookid);
+
+    await pool.query(query, bookValues);
+  }
+
+  if (updatedBook.genreid.length > 0) {
+    /**
+     * This is a database problem about managing
+     * many-to-many relationship
+     * Solution: Fully replace the existing genres
+     * for the book with the new ones
+     */
+    await pool.query(`DELETE FROM book_genre WHERE book_id = $1;`, [bookid]);
+    for (const genreid of updatedBook.genreid) {
+      await pool.query(
+        `
+        INSERT INTO book_genre (book_id, genre_id) VALUES ($1, $2)
+        `,
+        [bookid, genreid]
+      );
+    }
+  }
+
+  if (
+    bookAuthor === undefined ||
+    String(bookAuthor.id) !== updatedBook.authorid
+  ) {
+    await pool.query(
+      `UPDATE book_author
+      SET author_id = $1
+      WHERE book_id = $2`,
+      [updatedBook.authorid, bookid]
+    );
+  }
+
+  const { rows } = await pool.query(`SELECT * FROM book WHERE id = $1`, [
+    bookid,
+  ]);
+  return rows[0];
+}
+
 module.exports = {
   getAllBooks,
   getAllAuthors,
@@ -196,4 +256,5 @@ module.exports = {
   insertNewGenre,
   insertNewAuthor,
   insertNewBook,
+  updateBook,
 };

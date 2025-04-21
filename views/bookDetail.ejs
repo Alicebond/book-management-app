@@ -7,7 +7,9 @@
       <h2><%= bookInfo.title %></h2>
       <p>
         <span class="op">Author:</span>
+        <% if (bookAuthor) {%>
         <a href="<%= bookAuthor.url %>"><i><%= bookAuthor.name %></i></a>
+        <% } %>
       </p>
       <p>
         <span class="op">ISBN:</span>
@@ -32,7 +34,7 @@
         <% } else if (bookInfo.read) { %> 
             <span class="op">Status: </span> 
             <span class="check">&#10004</span> Read 
-        <% } else if (bookInfo.toRead) {%>
+        <% } else if (bookInfo.want_to_read) {%>
             <span class="op">Status: </span>
             <span>Want to read</span>
         <% } %>
