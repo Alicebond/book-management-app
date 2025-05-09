@@ -47,13 +47,13 @@ router.post("/author/add", authorController.authorAddPost);
 router.get("/author/:id", authorController.authorDetail);
 
 // Get to update author detail
-router.get("/author/:id/update", authorController.authroUpdateGet);
+router.get("/author/:id/update", authorController.authorUpdateGet);
 
 // Post to update author
-router.post("/author/:id/update", authorController.authroUpdatePost);
+router.post("/author/:id/update", authorController.authorUpdatePost);
 
 // Get to delete author
-router.get("/author/:id/delete");
+router.get("/author/:id/delete", authorController.authorDeleteGet);
 
 // Post to delete author
 router.post("/author/:id/delete", authorController.authorDeletePost);

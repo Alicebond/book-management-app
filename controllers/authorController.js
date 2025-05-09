@@ -114,7 +114,7 @@ exports.authorDeletePost = asyncHandler(async (req, res, next) => {
 });
 
 // Display author update form on GET
-exports.authroUpdateGet = asyncHandler(async (req, res, next) => {
+exports.authorUpdateGet = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const { author, authorBooks } = await db.getAuthorDetail(id);
   if (!author) throw new CustomNotFoundError("Author Not Found");
@@ -141,6 +141,6 @@ exports.authroUpdateGet = asyncHandler(async (req, res, next) => {
 });
 
 // Handle author update form on POST
-exports.authroUpdatePost = asyncHandler(async (req, res, next) => {
+exports.authorUpdatePost = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: author update");
 });
