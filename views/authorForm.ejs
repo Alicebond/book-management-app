@@ -2,29 +2,43 @@
 <html lang="en">
   <%- include('head') %>
   <body>
-    <%- include('header') %>
-    <h3>Add as New Author</h3>
+    <%- include('header') %> <% if (title === "update") {%>
+    <h3>Update Author</h3>
+    <% } else { %>
+    <h3>Add a New Author</h3>
+    <% } %>
     <div class="new new-author">
-      <form action="/author/add" method="post">
+      <form action="/author/<%= title === "update" ? `${authorInfo.id}/update` : "add" %>" method="post" >
         <p class="firstname">
           <label for="firstname">First Name*: </label>
-          <input type="text" name="firstname" id="firstname" value="<%=
-          authorInfo ? authorInfo.firstname : "" %>" required/>
+          <input 
+          type="text" 
+          name="firstname" 
+          id="firstname" 
+          value="<%= authorInfo.firstname || "" %>" required/>
         </p>
         <p class="lastname">
           <label for="lastname">Last Name*: </label>
-          <input type="text" name="lastname" id="lastname" value="<%= authorInfo
-          ? authorInfo.lastname : "" %>" required/>
+          <input 
+          type="text" 
+          name="lastname" 
+          id="lastname" 
+          value="<%= authorInfo.lastname || "" %>" required/>
         </p>
         <p>
           <label for="date-of-birth">Date of Birth: </label>
-          <input type="date" name="dateOfBirth" id="date-of-birth" value="<%=
-          authorInfo ? authorInfo.dateOfBirth : "" %>">
+          <input type="date" 
+          name="dateOfBirth" 
+          id="date-of-birth" 
+          value="<%=authorInfo.dateOfBirth || "" %>">
         </p>
         <p>
           <label for="date-of-death">Date of Death: </label>
-          <input type="date" name="dateOfDeath" id="date-of-death" value="<%=
-          authorInfo ? authorInfo.dateOfDeath : "" %>">
+          <input 
+          type="date" 
+          name="dateOfDeath" 
+          id="date-of-death" 
+          value="<%= authorInfo.dateOfDeath || "" %>">
         </p>
         <p class="about-author">
           <label class="overview" for="about-author">About: </label>
@@ -35,8 +49,7 @@
             id="about-author"
             rows="3"
             cols="33"
-          >
-<%= authorInfo ? authorInfo.description : "" %></textarea
+          ><%= authorInfo.description || "" %></textarea
           >
         </p>
         <p>

@@ -39,7 +39,7 @@ exports.authorDetail = asyncHandler(async (req, res, next) => {
 
 // * Get author add form * //
 exports.authorAddGet = asyncHandler(async (req, res, newxt) => {
-  res.render("authorForm", { authorInfo: false, errors: false });
+  res.render("authorForm", { title: false, authorInfo: false, errors: false });
 });
 
 // Hand author add on Post
@@ -82,6 +82,7 @@ exports.authorAddPost = [
     );
     if (exsitedAuthor) {
       res.render("authorForm", {
+        title: false,
         authorInfo,
         errors: [
           {
@@ -90,7 +91,11 @@ exports.authorAddPost = [
         ],
       });
     } else if (!errors.isEmpty()) {
-      res.render("authorForm", { authorInfo, errors: errors.array() });
+      res.render("authorForm", {
+        title: false,
+        authorInfo,
+        errors: errors.array(),
+      });
     } else {
       db.insertNewAuthor(authorInfo);
       res.redirect("/");
@@ -110,7 +115,29 @@ exports.authorDeletePost = asyncHandler(async (req, res, next) => {
 
 // Display author update form on GET
 exports.authroUpdateGet = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: author update");
+  const id = req.params.id;
+  const { author, authorBooks } = await db.getAuthorDetail(id);
+  if (!author) throw new CustomNotFoundError("Author Not Found");
+
+  const authorInfo = {
+    firstname: author.first_name,
+    lastname: author.last_name,
+    description: author.description
+      ? entities.decodeHTML5(author.description)
+      : false,
+  };
+
+  if (author.date_of_birth)
+    authorInfo.dateOfBirth = DateTime.fromJSDate(
+      author.date_of_birth
+    ).toISODate();
+
+  if (author.date_of_death)
+    authorInfo.dateOfDeath = DateTime.fromJSDate(
+      author.date_of_death
+    ).toISODate();
+
+  res.render("authorForm", { authorInfo, title: "update", errors: false });
 });
 
 // Handle author update form on POST
