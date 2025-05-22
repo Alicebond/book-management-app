@@ -202,9 +202,9 @@ async function updateBook(updatedBook, bookid) {
   }
 
   if (updatedBookColumns.length > 0) {
-    const query = `UPDATE book SET ${updatedBookColumns.join(
-      ", "
-    )} WHERE id = $${index + 1}`;
+    const query = `UPDATE book SET 
+    ${updatedBookColumns.join(", ")} 
+    WHERE id = $${index + 1}`;
     bookValues.push(bookid);
 
     await pool.query(query, bookValues);
@@ -246,6 +246,46 @@ async function updateBook(updatedBook, bookid) {
   return rows[0];
 }
 
+async function updateAuthor(id, newInfo) {
+  const authorResult = await pool.query(
+    `
+    SELECT * FROM author WHERE id = $1
+    `,
+    [id]
+  );
+
+  const authorInfo = authorResult.rows[0];
+
+  const updatedAuthorColumns = [],
+    authorValues = [];
+  let index = 0;
+
+  for (const key in newInfo) {
+    if (authorInfo[key] !== newInfo[key]) {
+      updatedAuthorColumns.push(`${key} = $${index + 1}`);
+      authorValues.push(newInfo[key]);
+      index++;
+    }
+  }
+
+  if (updatedAuthorColumns.length > 0) {
+    const query = `UPDATE author SET 
+        ${updatedAuthorColumns.join(", ")} 
+        WHERE id = $${index + 1}`;
+    authorValues.push(id);
+
+    await pool.query(query, authorValues);
+  }
+}
+
+async function updatedGenre(updatedInfo, id) {
+  await pool.query(
+    `
+    UPDATE genre SET name = $1 WHERE id = $2`,
+    [updatedInfo, id]
+  );
+}
+
 module.exports = {
   getAllBooks,
   getAllAuthors,
@@ -257,4 +297,6 @@ module.exports = {
   insertNewAuthor,
   insertNewBook,
   updateBook,
+  updateAuthor,
+  updatedGenre,
 };

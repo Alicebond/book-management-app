@@ -16,7 +16,7 @@ exports.genreDetail = asyncHandler(async (req, res, next) => {
 
 // *Get genre add form * //
 exports.genreAddGet = asyncHandler(async (req, res, newxt) => {
-  res.render("genreForm", { genre: false, errors: false });
+  res.render("genreForm", { title: false, genre: false, errors: false });
 });
 
 // Handle genre add form on Post
@@ -59,10 +59,32 @@ exports.genreDeletePost = asyncHandler(async (req, res, next) => {
 
 // Display genre update form on GET
 exports.genreUpdateGet = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: genre update GET");
+  const id = req.params.id;
+  const { genre, _ } = await db.getGenreDetail(id);
+
+  res.render("genreForm", { genre, title: "update", errors: false });
 });
 
 // Hande genre update form on POST
-exports.genreUpdatePost = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: genre update POST");
-});
+exports.genreUpdatePost = [
+  body("genre", "Genre name must contain at least 3 characters.")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const id = req.params.id;
+    const updatedGenre = req.body.genre;
+    if (!errors.isEmpty()) {
+      res.render("genreForm", {
+        title: "update",
+        genre,
+        errors: errors.array(),
+      });
+    } else {
+      await db.updatedGenre(updatedGenre, id);
+      res.redirect(`/genre/${id}`);
+    }
+  }),
+];

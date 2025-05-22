@@ -15,7 +15,7 @@
           type="text" 
           name="firstname" 
           id="firstname" 
-          value="<%= authorInfo.firstname || "" %>" required/>
+          value="<%= authorInfo.first_name || "" %>" required/>
         </p>
         <p class="lastname">
           <label for="lastname">Last Name*: </label>
@@ -23,14 +23,14 @@
           type="text" 
           name="lastname" 
           id="lastname" 
-          value="<%= authorInfo.lastname || "" %>" required/>
+          value="<%= authorInfo.last_name || "" %>" required/>
         </p>
         <p>
           <label for="date-of-birth">Date of Birth: </label>
           <input type="date" 
           name="dateOfBirth" 
           id="date-of-birth" 
-          value="<%=authorInfo.dateOfBirth || "" %>">
+          value="<%=authorInfo.date_of_birth || "" %>">
         </p>
         <p>
           <label for="date-of-death">Date of Death: </label>
@@ -38,7 +38,7 @@
           type="date" 
           name="dateOfDeath" 
           id="date-of-death" 
-          value="<%= authorInfo.dateOfDeath || "" %>">
+          value="<%= authorInfo.date_of_death || "" %>">
         </p>
         <p class="about-author">
           <label class="overview" for="about-author">About: </label>

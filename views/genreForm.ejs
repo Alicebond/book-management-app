@@ -2,13 +2,15 @@
 <html lang="en">
   <%- include('head') %>
   <body>
-    <%- include('header') %>
+    <%- include('header') %> <% if( title === 'update') { %>
+    <h3>Update Genre</h3>
+    <% } else {%>
     <h3>Add a New Genre</h3>
-    <form action="/genre/add" method="post">
+    <% } %>
+    <form action="/genre/<%= title === "update" ? `${genre.id}/update` : "add" %>" method="post">
       <p class="new new-genre">
         <label for="genre">Genre: </label>
-        <input type="text" name="genre" id="genre" value="<% genre ? genre : ""
-        %>"/>
+        <input type="text" name="genre" id="genre" value="<%= genre.name || ""%>"/>
       </p>
       <p>
         <button type="submit">Submit</button>

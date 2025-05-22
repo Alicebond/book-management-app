@@ -120,20 +120,21 @@ exports.authorUpdateGet = asyncHandler(async (req, res, next) => {
   if (!author) throw new CustomNotFoundError("Author Not Found");
 
   const authorInfo = {
-    firstname: author.first_name,
-    lastname: author.last_name,
+    id,
+    first_name: author.first_name,
+    last_name: author.last_name,
     description: author.description
       ? entities.decodeHTML5(author.description)
       : false,
   };
 
   if (author.date_of_birth)
-    authorInfo.dateOfBirth = DateTime.fromJSDate(
+    authorInfo.date_of_birth = DateTime.fromJSDate(
       author.date_of_birth
     ).toISODate();
 
   if (author.date_of_death)
-    authorInfo.dateOfDeath = DateTime.fromJSDate(
+    authorInfo.date_of_death = DateTime.fromJSDate(
       author.date_of_death
     ).toISODate();
 
@@ -141,6 +142,49 @@ exports.authorUpdateGet = asyncHandler(async (req, res, next) => {
 });
 
 // Handle author update form on POST
-exports.authorUpdatePost = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: author update");
-});
+exports.authorUpdatePost = [
+  body("firstname")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("First name must be specified."),
+  body("lastname")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Last name must be specified."),
+  body("date-of-birth", "Invalid date of birth.")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+  body("date-of-death", "Invalid date of birth.")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+  body("about-author").trim().escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const id = req.params.id;
+    const authorInfo = {
+      first_name: req.body.firstname,
+      last_name: req.body.lastname,
+      description: req.body.aboutAuthor || null,
+      date_of_birth:
+        req.body.dateOfBirth === "" ? null : new Date(req.body.dateOfBirth),
+      date_of_death:
+        req.body.dateOfDeath === "" ? null : new Date(req.body.dateOfDeath),
+    };
+
+    if (!errors.isEmpty()) {
+      res.render("authorForm", {
+        title: "update",
+        authorInfo,
+        errors: errors.array(),
+      });
+    } else {
+      await db.updateAuthor(id, authorInfo);
+      res.redirect(`/author/${id}`);
+    }
+  }),
+];
