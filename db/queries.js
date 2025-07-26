@@ -286,6 +286,18 @@ async function updatedGenre(updatedInfo, id) {
   );
 }
 
+async function deleteBook(id) {
+  await pool.query(`DELETE FROM book WHERE id = $1`, [id]);
+}
+
+async function deleteGenre(id) {
+  await pool.query(`DELETE FROM genre WHERE id = $1`, [id]);
+}
+
+async function deleteAuthor(id) {
+  await pool.query(`DELETE FROM author WHERE id = $1`, [id]);
+}
+
 module.exports = {
   getAllBooks,
   getAllAuthors,
@@ -299,4 +311,7 @@ module.exports = {
   updateBook,
   updateAuthor,
   updatedGenre,
+  deleteBook,
+  deleteGenre,
+  deleteAuthor,
 };

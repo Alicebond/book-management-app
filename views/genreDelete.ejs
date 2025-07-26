@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <%- include ('head') %>
+  <body>
+    <%- include ('header') %>
+    <h2><%= `${title}: ${genre.name}` %></h2>
+    <% if (warning) {%>
+    <p>
+      <b><%= warning %></b>
+    </p>
+    <button type="button"><a href="/">Back to home</a></button>
+    <% } else { %>
+    <p>
+      <b> Are your sure you want to delete <%= genre.name %>? </b>
+      <b>This action cannot be undone.</b>
+    </p>
+    <form action="" method="post">
+      <div class="form-group">
+        <input type="hidden" name="bookid" , value="<%= genre.id %>" />
+      </div>
+      <button type="submit">Delete</button>
+      <button type="button"><a href="/">Back to home</a></button>
+    </form>
+    <% } %> <%- include ('footer') %>
+  </body>
+</html>

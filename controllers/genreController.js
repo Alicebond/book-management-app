@@ -49,12 +49,41 @@ exports.genreAddPost = [
 
 // Display genre delete form on Get
 exports.genreDeleteGet = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: genre delete GET");
+  const { genre, genreBooks } = await db.getGenreDetail(req.params.id);
+
+  if (genre === null) {
+    res.redirect("/");
+    return;
+  }
+
+  const warning =
+    genreBooks.length > 0
+      ? `Genre: ${genre.name} is referenced by other books, cannot delete it.`
+      : false;
+
+  res.render("genreDelete", {
+    title: "Delete Genre",
+    genre,
+    genreBooks,
+    warning,
+  });
 });
 
 // Handle genre delete form on POST
 exports.genreDeletePost = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: genre delete POST");
+  const { genre, genreBooks } = await db.getGenreDetail(req.params.id);
+
+  if (genreBooks.length > 0) {
+    res.render("genreDelete", {
+      title: "Delete Genre",
+      genre,
+      genreBooks,
+      warning: `Genre: ${genre.name} is referenced by other books, cannot be deleted directly.`,
+    });
+  }
+
+  await db.deleteGenre(req.params.id);
+  res.redirect("/");
 });
 
 // Display genre update form on GET

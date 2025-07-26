@@ -215,10 +215,25 @@ exports.bookUpdatePost = [
 
 // Display book delete form on GET
 exports.bookDeleteGet = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: book delete GET");
+  const { bookInfo, bookAuthor, bookGenres } = await db.getBookDetail(
+    req.params.id
+  );
+
+  if (bookInfo === null) {
+    res.redirect("/");
+  }
+
+  res.render("bookDelete", {
+    title: "Delete Book",
+    bookInfo,
+    bookAuthor,
+    bookGenres,
+  });
 });
 
 // Handle book delete form on POST
 exports.bookDeletePost = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: book delete POST");
+  const id = req.params.id;
+  await db.deleteBook(id);
+  res.redirect("/");
 });

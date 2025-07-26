@@ -105,12 +105,41 @@ exports.authorAddPost = [
 
 // Display Author delete fomr on GET
 exports.authorDeleteGet = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Author delete GET");
+  const { author, authorBooks } = await db.getAuthorDetail(req.params.id);
+
+  if (author === null) {
+    res.redirect("/");
+    return;
+  }
+
+  const warning =
+    authorBooks.length > 0
+      ? `Author: ${author.name} is referenced by other books, cannot delete it.`
+      : false;
+
+  res.render("authorDelete", {
+    title: "Delete Author",
+    author,
+    authorBooks,
+    warning,
+  });
 });
 
 // Handle author delete on POST
 exports.authorDeletePost = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: authror delete POST");
+  const { author, authorBooks } = await db.getAuthorDetail(req.params.id);
+
+  if (authorBooks > 0) {
+    res.render("authorDelete", {
+      title: "Delete Author",
+      author,
+      authorBooks,
+      warning: `Author: ${author.name} is referenced by other books, cannot delete it.`,
+    });
+  }
+
+  await db.deleteAuthor(req.params.id);
+  res.redirect("/");
 });
 
 // Display author update form on GET

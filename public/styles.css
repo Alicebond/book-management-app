@@ -42,6 +42,15 @@ header {
   margin-top: 40px;
 }
 
+.section p {
+  margin-top: 0;
+}
+
+.section h4,
+.section {
+  margin-bottom: 15px;
+}
+
 .check {
   color: green;
 }
@@ -53,13 +62,7 @@ header {
 .author-books {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-}
-
-.books-title,
-.genres-title,
-.authors-title {
-  margin-bottom: 0;
+  column-gap: 20px;
 }
 
 .new-genre input {
@@ -74,10 +77,16 @@ header {
   display: block;
 }
 
-.errors {
+.errors,
+b {
   color: red;
 }
 
 footer {
   margin-top: 40px;
+}
+
+button a {
+  text-decoration: none;
+  color: black;
 }

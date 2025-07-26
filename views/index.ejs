@@ -3,11 +3,8 @@
   <%- include ('head') %>
   <body>
     <%- include ('header') %>
-    <div class="books">
-      <p class="books-title">
-        <b>Books: </b>
-        <span><%= books.length %></span>
-      </p>
+    <div class="section books">
+      <h4>Books: <span><%= books.length %></span></h4>
       <div class="books-main">
         <% if (books) {%> <% books.forEach( (book) => { %>
         <p>
@@ -18,11 +15,8 @@
         <% } %>
       </div>
     </div>
-    <div class="genres">
-      <p class="genres-title">
-        <b>Genres: </b>
-        <span><%= genres.length %></span>
-      </p>
+    <div class="section genres">
+      <h4>Genres: <span><%= genres.length %></span></h4>
       <div class="genres-main">
         <% if (genres) {%> <% genres.forEach( (genre) => { %>
         <p class="genre"><a href="<%= genre.url %>"> <%= genre.name %> </a></p>
@@ -31,11 +25,8 @@
         <% } %>
       </div>
     </div>
-    <div class="authors">
-      <p class="authors-title">
-        <b>Authors: </b>
-        <span><%= authors.length %></span>
-      </p>
+    <div class="section authors">
+      <h4>Authors: <span><%= authors.length %></span></h4>
       <div class="authors-main">
         <% if (authors) {%> <% authors.forEach( (author) => { %>
         <p><a href="<%= author.url %>"> <%= author.name %> </a></p>
