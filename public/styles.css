@@ -3,19 +3,16 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-header {
+.header,
+.footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
-.header-left a {
+.header a {
   text-decoration: none;
   color: black;
-}
-
-.header-right a {
-  margin: 0 15px 0;
 }
 
 .book-info p {
@@ -89,4 +86,70 @@ footer {
 button a {
   text-decoration: none;
   color: black;
+}
+
+.header {
+  grid-area: header;
+}
+
+.nav {
+  grid-area: nav;
+}
+
+.main {
+  grid-area: content;
+}
+
+.footer {
+  grid-area: footer;
+}
+
+.wrapper {
+  display: grid;
+  gap: 20px;
+  grid-template-areas: "header" "nav" "content" "footer";
+}
+
+@media (min-width: 540px) {
+  .nav-section1,
+  .nav-section2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .nav p {
+    margin: 10px 20px 0 0;
+  }
+}
+
+@media (min-width: 700px) {
+  .wrapper {
+    grid-template-columns: 1fr 3fr;
+    grid-template-areas:
+      "header header"
+      "nav content"
+      "footer footer";
+  }
+
+  .nav {
+    margin-left: 20px;
+  }
+
+  .nav-section1,
+  .nav-section2 {
+    display: block;
+  }
+
+  .nav-section2 {
+    margin-top: 30px;
+  }
+
+  .nav-section1 > .home-link {
+    margin-top: 0;
+  }
+
+  .books > h4 {
+    margin-top: 0;
+  }
 }

@@ -3,34 +3,39 @@
   <%- include ('head') %>
   <body>
     <%- include ('header') %>
-    <div class="author-main">
-      <h2 class="author-name"><%= name%></h2>
-      <div class="author-info">
-        <% if(dateOfBirth) {%>
-        <p class="author-dob">Date of Birth: <%=dateOfBirth%></p>
-        <% } %> <% if(dateOfDeath) {%>
-        <p class="author-dod">Date of Death: <%=dateOfDeath%></p>
-        <% } %> <% if(description) {%>
-        <p class="author-description">Description: <%=description%></p>
-        <% } %>
-      </div>
-      <div class="author-books">
-        <% if(authorBooks.length) { %> <% authorBooks.forEach((book) => {%>
-        <p class="author-book">
-          <a href="<%= book.url %>"><%= book.title %></a>
+    <div class="hero">
+      <%- include ('sidebar') %>
+      <div class="main hero-right">
+        <div class="author-main">
+          <h2 class="author-name"><%= name%></h2>
+          <div class="author-info">
+            <% if(dateOfBirth) {%>
+            <p class="author-dob">Date of Birth: <%=dateOfBirth%></p>
+            <% } %> <% if(dateOfDeath) {%>
+            <p class="author-dod">Date of Death: <%=dateOfDeath%></p>
+            <% } %> <% if(description) {%>
+            <p class="author-description">Description: <%=description%></p>
+            <% } %>
+          </div>
+          <div class="author-books">
+            <% if(authorBooks.length) { %> <% authorBooks.forEach((book) => {%>
+            <p class="author-book">
+              <a href="<%= book.url %>"><%= book.title %></a>
+            </p>
+            <% })} else { %>
+            <p>There are no books of <%=name %></p>
+            <% } %>
+          </div>
+        </div>
+        <br />
+        <p class="update">
+          <a href="<%=url%>/update">Update Author</a>
         </p>
-        <% })} else { %>
-        <p>There are no books of <%=name %></p>
-        <% } %>
+        <p class="delete">
+          <a href="<%=url%>/delete">Delete Author</a>
+        </p>
       </div>
     </div>
-    <br />
-    <p class="update">
-      <a href="<%=url%>/update">Update Author</a>
-    </p>
-    <p class="delete">
-      <a href="<%=url%>/delete">Delete Author</a>
-    </p>
     <%- include ('footer') %>
   </body>
 </html>

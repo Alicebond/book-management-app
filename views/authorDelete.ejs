@@ -3,24 +3,30 @@
   <%- include ('head') %>
   <body>
     <%- include ('header') %>
-    <h2><%= `${title}: ${author.name}` %></h2>
-    <% if (warning) {%>
-    <p>
-      <b><%= warning %></b>
-    </p>
-    <button type="button"><a href="/">Back to home</a></button>
-    <% } else { %>
-    <p>
-      <b> Are your sure you want to delete <%= author.name %>? </b>
-      <b>This action cannot be undone.</b>
-    </p>
-    <form action="" method="post">
-      <div class="form-group">
-        <input type="hidden" name="bookid" , value="<%= author.id %>" />
+    <div class="hero">
+      <%- include ('sidebar') %>
+      <div class="main hero-right">
+        <h2><%= `${title}: ${author.name}` %></h2>
+        <% if (warning) {%>
+        <p>
+          <b><%= warning %></b>
+        </p>
+        <button type="button"><a href="/">Back to home</a></button>
+        <% } else { %>
+        <p>
+          <b> Are your sure you want to delete <%= author.name %>? </b>
+          <b>This action cannot be undone.</b>
+        </p>
+        <form action="" method="post">
+          <div class="form-group">
+            <input type="hidden" name="bookid" , value="<%= author.id %>" />
+          </div>
+          <button type="submit">Delete</button>
+          <button type="button"><a href="/">Back to home</a></button>
+        </form>
+        <% } %>
       </div>
-      <button type="submit">Delete</button>
-      <button type="button"><a href="/">Back to home</a></button>
-    </form>
-    <% } %> <%- include ('footer') %>
+    </div>
+    <%- include ('footer') %>
   </body>
 </html>

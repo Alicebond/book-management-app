@@ -1,38 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
   <%- include ('head') %>
-  <body>
-    <%- include ('header') %>
-    <div class="section books">
-      <h4>Books: <span><%= books.length %></span></h4>
-      <div class="books-main">
-        <% if (books) {%> <% books.forEach( (book) => { %>
-        <p>
-          <a href="<%= book.url %>"> <%= book.title %> </a>
-        </p>
-        <%} ) %> <% } else { %>
-        <p>There are no books, try add one <a href="/book/add">here</a></p>
-        <% } %>
+  <body class="wrapper">
+    <%- include ('header') %> <%- include ('nav') %>
+    <div class="main">
+      <div class="section books" id="all-books">
+        <h4>Books: <span><%= books.length %></span></h4>
+        <div class="books-main">
+          <% if (books) {%> <% books.forEach( (book) => { %>
+          <p>
+            <a href="<%= book.url %>"> <%= book.title %> </a>
+          </p>
+          <%} ) %> <% } else { %>
+          <p>There are no books, try add one <a href="/book/add">here</a></p>
+          <% } %>
+        </div>
       </div>
-    </div>
-    <div class="section genres">
-      <h4>Genres: <span><%= genres.length %></span></h4>
-      <div class="genres-main">
-        <% if (genres) {%> <% genres.forEach( (genre) => { %>
-        <p class="genre"><a href="<%= genre.url %>"> <%= genre.name %> </a></p>
-        <%} ) %> <% } else { %>
-        <p>There are no genres</p>
-        <% } %>
+      <div class="section genres" id="all-genres">
+        <h4>Genres: <span><%= genres.length %></span></h4>
+        <div class="genres-main">
+          <% if (genres) {%> <% genres.forEach( (genre) => { %>
+          <p class="genre">
+            <a href="<%= genre.url %>"> <%= genre.name %> </a>
+          </p>
+          <%} ) %> <% } else { %>
+          <p>There are no genres</p>
+          <% } %>
+        </div>
       </div>
-    </div>
-    <div class="section authors">
-      <h4>Authors: <span><%= authors.length %></span></h4>
-      <div class="authors-main">
-        <% if (authors) {%> <% authors.forEach( (author) => { %>
-        <p><a href="<%= author.url %>"> <%= author.name %> </a></p>
-        <%} ) %> <% } else { %>
-        <p>There are no authors</p>
-        <% } %>
+      <div class="section authors" id="all-authors">
+        <h4>Authors: <span><%= authors.length %></span></h4>
+        <div class="authors-main">
+          <% if (authors) {%> <% authors.forEach( (author) => { %>
+          <p><a href="<%= author.url %>"> <%= author.name %> </a></p>
+          <%} ) %> <% } else { %>
+          <p>There are no authors</p>
+          <% } %>
+        </div>
       </div>
     </div>
     <%- include ('footer') %>
