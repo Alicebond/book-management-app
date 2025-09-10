@@ -2,25 +2,31 @@
 <html lang="en">
   <%- include ('head') %>
   <body>
-    <%- include ('header') %>
-    <div class="genre-main">
-      <h2 class="genre-name"><%= genre.name %></h2>
-      <div class="genre-books">
-        <% if (genreBooks.length) {%> <% genreBooks.forEach( (book) => { %>
-        <p>
-          <a href="<%= book.url %>"> <%= book.title %> </a>
-        </p>
-        <%} ) %> <% } else { %>
-        <p>There are no books, try add one <a href="/book/add">here</a></p>
-        <% } %>
+    <div class="wrapper">
+      <%- include ('header') %> <%- include ('nav') %>
+      <div class="main">
+        <div class="genre-main">
+          <h2 class="genre-name"><%= genre.name %></h2>
+          <div class="genre-books">
+            <% if (genreBooks.length) {%> <% genreBooks.forEach( (book) => { %>
+            <p>
+              <a href="<%= book.url %>"> <%= book.title %> </a>
+            </p>
+            <%} ) %> <% } else { %>
+            <p>There are no books, try add one <a href="/book/add">here</a></p>
+            <% } %>
+          </div>
+        </div>
+        <div class="btn-box">
+          <p class="update">
+            <a href="<%=genre.url%>/update">Update Genre</a>
+          </p>
+          <p class="delete">
+            <a href="<%=genre.url%>/delete">Delete Genre</a>
+          </p>
+        </div>
       </div>
+      <%- include ('footer') %>
     </div>
-    <p class="update">
-      <a href="<%=genre.url%>/update">Update Genre</a>
-    </p>
-    <p class="delete">
-      <a href="<%=genre.url%>/delete">Delete Genre</a>
-    </p>
-    <%- include ('footer') %>
   </body>
 </html>

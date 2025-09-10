@@ -10,13 +10,55 @@ body {
   align-items: center;
 }
 
-.header a {
+a {
   text-decoration: none;
+  color: dodgerblue;
+}
+
+.genre-books a,
+.author-books a {
+  font-size: 1.2rem;
+}
+
+.header a {
   color: black;
 }
 
+.nav a {
+  font-size: 1.2rem;
+}
+
+.main,
+.nav {
+  padding: 0 30px;
+}
+
 .book-info p {
-  margin: 4px 0;
+  font-size: 1.2rem;
+}
+
+.book-info .title {
+  margin-top: 0;
+}
+
+.btn-box {
+  display: flex;
+  align-items: center;
+}
+
+.btn-box a {
+  padding: 10px 5px;
+  border: 1px solid dodgerblue;
+  border-radius: 5px;
+}
+
+.btn-box a:hover {
+  background-color: dodgerblue;
+  color: black;
+}
+
+.btn-box .update {
+  margin-right: 20px;
 }
 
 .op {
@@ -24,15 +66,13 @@ body {
 }
 
 .ge {
-  background-color: black;
-  padding: 4px;
-  margin-left: 10px;
-  border-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .ge a {
-  text-decoration: none;
-  color: white;
+  text-decoration: underline;
 }
 
 .ds p {
@@ -46,6 +86,10 @@ body {
 .section h4,
 .section {
   margin-bottom: 15px;
+}
+
+.section a {
+  font-size: 1.2rem;
 }
 
 .check {
@@ -84,7 +128,6 @@ footer {
 }
 
 button a {
-  text-decoration: none;
   color: black;
 }
 
@@ -106,20 +149,16 @@ button a {
 
 .wrapper {
   display: grid;
-  gap: 20px;
   grid-template-areas: "header" "nav" "content" "footer";
 }
 
-@media (min-width: 540px) {
+@media (min-width: 560px) {
   .nav-section1,
   .nav-section2 {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .nav p {
-    margin: 10px 20px 0 0;
+    gap: 30px;
   }
 }
 
@@ -134,6 +173,7 @@ button a {
 
   .nav {
     margin-left: 20px;
+    padding: 0;
   }
 
   .nav-section1,
