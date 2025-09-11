@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <%- include('head') %>
-  <body>
-    <%- include('header') %> <% if( title === 'update') { %>
+  <body class="wrapper">
+    <%- include('header') %> 
+    <%- include('nav') %>
+    <div class="main">
+    <% if( title === 'update') { %>
     <h3>Update Genre</h3>
     <% } else {%>
     <h3>Add a New Genre</h3>
@@ -13,7 +16,7 @@
         <input type="text" name="genre" id="genre" value="<%= genre.name || ""%>"/>
       </p>
       <p>
-        <button type="submit">Submit</button>
+        <button class="btn" type="submit">Submit</button>
       </p>
     </form>
     <% if(errors) {%>
@@ -22,6 +25,7 @@
       <li><%= error.msg %></li>
     </ul>
     <% })} %>
+    </div>
     <br />
     <%- include('footer') %>
   </body>

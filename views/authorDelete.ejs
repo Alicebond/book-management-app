@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
   <%- include ('head') %>
-  <body>
-    <%- include ('header') %>
-    <div class="hero">
-      <%- include ('sidebar') %>
-      <div class="main hero-right">
+  <body class="wrapper">
+    <%- include ('header') %> <%- include ('nav') %>
+    <div class="main">
+      <div class="hero-right">
         <h2><%= `${title}: ${author.name}` %></h2>
         <% if (warning) {%>
         <p>
           <b><%= warning %></b>
         </p>
-        <button type="button"><a href="/">Back to home</a></button>
+        <a class="btn" href="/">Back to home</a>
         <% } else { %>
         <p>
           <b> Are your sure you want to delete <%= author.name %>? </b>
@@ -21,8 +20,7 @@
           <div class="form-group">
             <input type="hidden" name="bookid" , value="<%= author.id %>" />
           </div>
-          <button type="submit">Delete</button>
-          <button type="button"><a href="/">Back to home</a></button>
+          <button class="btn" type="submit">Delete</button>
         </form>
         <% } %>
       </div>

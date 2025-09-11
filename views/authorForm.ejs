@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <%- include('head') %>
-  <body>
-    <%- include('header') %> <% if (title === "update") {%>
+  <body class="wrapper">
+    <%- include('header') %> 
+    <%- include('nav') %>
+    <div class="main">
+    <% if (title === "update") {%>
     <h3>Update Author</h3>
     <% } else { %>
     <h3>Add a New Author</h3>
@@ -43,7 +46,7 @@
         <p class="about-author">
           <label class="overview" for="about-author">About: </label>
           <textarea
-            class="overview"
+            class="overview textarea"
             type="text"
             name="aboutAuthor"
             id="about-author"
@@ -53,7 +56,7 @@
           >
         </p>
         <p>
-          <button type="submit">Submit</button>
+          <button class="btn" type="submit">Submit</button>
         </p>
       </form>
       <% if(errors) {%>
@@ -62,6 +65,7 @@
         <li><%= error.msg %></li>
       </ul>
       <% })} %>
+    </div>
     </div>
     <br />
     <%- include('footer') %>

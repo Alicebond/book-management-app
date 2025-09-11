@@ -1,6 +1,13 @@
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
+  margin: 0;
 }
 
 .header,
@@ -46,13 +53,21 @@ a {
   align-items: center;
 }
 
-.btn-box a {
+.btn-box a,
+.btn {
   padding: 10px 5px;
   border: 1px solid dodgerblue;
   border-radius: 5px;
 }
 
-.btn-box a:hover {
+.btn {
+  background-color: #fff;
+  color: dodgerblue;
+  cursor: pointer;
+}
+
+.btn-box a:active,
+.btn:active {
   background-color: dodgerblue;
   color: black;
 }
@@ -131,6 +146,39 @@ button a {
   color: black;
 }
 
+/* ---------------Form Style------------------------------- */
+
+.main input,
+.main select {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid dodgerblue;
+}
+
+.main .genre-selection input {
+  display: inline;
+  width: auto;
+}
+
+.genre-selection {
+  padding: 5px;
+}
+
+.genre-selection input:checked {
+  background-color: dodgerblue;
+}
+
+.fieldset,
+.textarea {
+  border: 1px solid dodgerblue;
+}
+
+.textarea {
+  box-sizing: border-box;
+  width: 100%;
+}
+
 .header {
   grid-area: header;
 }
@@ -191,5 +239,19 @@ button a {
 
   .books > h4 {
     margin-top: 0;
+  }
+
+  .btn-box a:hover,
+  .btn:hover {
+    background-color: dodgerblue;
+    color: black;
+  }
+
+  .main input,
+  .main select,
+  .fieldset,
+  .textarea {
+    box-sizing: border-box;
+    width: 70%;
   }
 }
