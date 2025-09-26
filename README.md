@@ -1,3 +1,5 @@
+The app is live here: https://book-management-app-ms59.onrender.com/
+
 A basic CRUD book management app built with Express.js and PostgreSQL, based on [The Odin Project](https://www.theodinproject.com/lessons/node-path-nodejs-inventory-application).
 
 This project is inspired by [MDN Express tutorial](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/Express_Nodejs/Tutorial_local_library_website)
