@@ -11,8 +11,12 @@ CREATE TABLE book (
   ISBN VARCHAR(13),
   pages INT,
   added DATE DEFAULT NOW(),
+  want_to_read BOOLEAN DEFAULT FALSE,
   reading BOOLEAN DEFAULT FALSE,
-  read BOOLEAN DEFAULT FALSE
+  read BOOLEAN DEFAULT FALSE,
+  description TEXT,
+  language TEXT,
+  url TEXT,
 );
 
 CREATE TABLE author (
@@ -23,11 +27,13 @@ CREATE TABLE author (
   date_of_birth DATE,
   date_of_death DATE,
   name TEXT GENERATED ALWAYS AS (first_name || ' ' || last_name) STORED
+  url TEXT,
 );
 
 CREATE TABLE genre (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  name VARCHAR(255)
+  name VARCHAR(255),
+  url TEXT,
 );
 
 CREATE TABLE book_author (
